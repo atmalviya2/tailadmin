@@ -2,7 +2,7 @@ import Breadcrumb from '../components/Breadcrumb.tsx';
 import ChartFour from '../components/ChartFour';
 import ChartOne from '../components/ChartOne.tsx';
 import ChartThree from '../components/ChartThree.tsx';
-import ChartTwo from '../components/ChartTwo.tsx';
+import ChartTwo from '../components/OrderCountChart.tsx';
 
 const Chart = () => {
   return (
