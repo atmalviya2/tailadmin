@@ -6,8 +6,7 @@ interface CompletionGaugeProps {
   orderData: OrderData
 }
 const CompletionGauges: React.FC<CompletionGaugeProps> = ({ orderData }) => {
-  let guageData: any[] = []
-  guageData = [
+  const guageData = [
     {
       title: "Cancelled Order",
       percentage: orderData.cancelledPercentage

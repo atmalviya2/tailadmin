@@ -3,14 +3,12 @@ import { ApexOptions } from 'apexcharts';
 import React from 'react';
 import ReactApexChart from 'react-apexcharts';
 
-
 interface PieChartProps {
   zipcodeData: ZipcodeData[]
 }
 
 const PieChart: React.FC<PieChartProps> = ({ zipcodeData }) => {
   const sortedByCount = [...zipcodeData].sort((a, b) => b.count - a.count);
-  console.log("", sortedByCount)
   const top10ByCount = sortedByCount.slice(0, 10);
   const bottom10ByCount = sortedByCount.slice(-10);
 

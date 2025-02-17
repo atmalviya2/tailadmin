@@ -1,6 +1,6 @@
 import { OrderData } from '@/types/order';
 import { ApexOptions } from 'apexcharts';
-import React, { useState } from 'react';
+import React from 'react';
 import ReactApexChart from 'react-apexcharts';
 
 const options: ApexOptions = {
@@ -69,18 +69,11 @@ const options: ApexOptions = {
   },
 };
 
-interface ChartTwoState {
-  series: {
-    name: string;
-    data: number[];
-  }[];
-}
-
 interface BarChartProps {
   orderData: OrderData
 }
 const OrderCountChart: React.FC<BarChartProps> = ({ orderData }) => {
-  const [state, setState] = useState<ChartTwoState>({
+  const data = {
     series: [
       {
         name: 'Orders',
@@ -93,7 +86,7 @@ const OrderCountChart: React.FC<BarChartProps> = ({ orderData }) => {
         ],
       }
     ],
-  });
+  };
 
   return (
     <div className="rounded-xl col-span-12 border border-stroke bg-white p-7.5 shadow-default dark:border-strokedark dark:bg-boxdark xl:col-span-6">
@@ -108,7 +101,7 @@ const OrderCountChart: React.FC<BarChartProps> = ({ orderData }) => {
         <div id="chartTwo" className="-ml-5 -mb-9">
           <ReactApexChart
             options={options}
-            series={state.series}
+            series={data.series}
             type="bar"
             height={350}
           />

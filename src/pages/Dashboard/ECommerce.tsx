@@ -2,18 +2,13 @@ import CompletionGauges from '@/components/PercentageCards';
 import IncomeCards from '@/components/IncomeCards';
 import OrderCountChart from '@/components/OrderCountChart';
 import { DriverStatistics } from '@/components/DriverStatistics';
-import PieChart from '@/components/ChartThree.tsx';
+import PieChart from '@/components/PieChart';
+import { useEffect, useState } from 'react';
+import { DatePickerDemo } from '@/components/ui/daypicker';
+import moment from "moment";
+import { useOrderStats } from '@/hooks/useOrderStats';
+import { OrderData } from '@/types/order';
 
-const OrderData = {
-  "totalFinishedOrders": 456,
-  "cancelledOrders": 85,
-  "completedOrders": 371,
-  "completedOnTimeOrders": 244,
-  "pickedUpOnTimeOrders": 217,
-  "cancelledPercentage": 18.640350877192983,
-  "completedOnTimePercentage": 65.76819407008087,
-  "pickedUpOnTimePercentage": 58.490566037735846
-}
 const PaymentData = {
   "total_delivery_fee": 8972.17,
   "total_driver_pay": 11989.78,
@@ -425,14 +420,45 @@ const DriverData = [
   }
 ]
 const ECommerce = () => {
+  const [startDate, setStartDate] = useState<Date>(moment().subtract(1, "months").toDate());
+  const [endDate, setEndDate] = useState<Date>(moment().toDate());
+  const [orderData, setOrderData] = useState<OrderData>({
+    totalFinishedOrders: 0,
+    cancelledOrders: 0,
+    completedOrders: 0,
+    completedOnTimeOrders: 0,
+    pickedUpOnTimeOrders: 0,
+    cancelledPercentage: 0,
+    completedOnTimePercentage: 0,
+    pickedUpOnTimePercentage: 0,
+  })
+  const { data, refetch } = useOrderStats({
+    startDate: moment(startDate).format("YYYY-MM-DD"),
+    endDate: moment(endDate).format("YYYY-MM-DD"),
+  });
+  const handleStartDate = async (date: Date) => {
+    await setStartDate(date);
+    refetch();
+  }
+  const handleEndDate = async (date: Date) => {
+    await setEndDate(date);
+    refetch();
+  }
+
+  useEffect(() => {
+    if (data) {
+      setOrderData(data);
+    }
+    console.log("orderData", data)
+  }, [data, startDate, endDate]);
   return (
     <>
+      <DatePickerDemo date={startDate} onChange={handleStartDate} />
+      <DatePickerDemo date={endDate} onChange={handleEndDate} />
       <IncomeCards paymentData={PaymentData} />
-
-      <CompletionGauges orderData={OrderData} />
-
+      <CompletionGauges orderData={orderData} />
       <div className="mt-4 grid grid-cols-12 gap-6 md:mt-6 md:gap-6 2xl:mt-7.5 2xl:gap-7.5">
-        <OrderCountChart orderData={OrderData} />
+        <OrderCountChart orderData={orderData} />
         <PieChart zipcodeData={ZipcodeData} />
         <div className="col-span-12 xl:col-span-8">
           <DriverStatistics driverData={DriverData} />
