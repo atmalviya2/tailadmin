@@ -4,7 +4,7 @@ import React from 'react';
 import ReactApexChart from 'react-apexcharts';
 
 interface PieChartProps {
-  zipcodeData: ZipcodeData[]
+  zipcodeData: ZipcodeData[] | []
 }
 
 const PieChart: React.FC<PieChartProps> = ({ zipcodeData }) => {

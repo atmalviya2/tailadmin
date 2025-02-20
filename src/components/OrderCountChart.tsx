@@ -70,7 +70,7 @@ const options: ApexOptions = {
 };
 
 interface BarChartProps {
-  orderData: OrderData
+  orderData: OrderData | null
 }
 const OrderCountChart: React.FC<BarChartProps> = ({ orderData }) => {
   const data = {
@@ -78,11 +78,11 @@ const OrderCountChart: React.FC<BarChartProps> = ({ orderData }) => {
       {
         name: 'Orders',
         data: [
-          orderData.totalFinishedOrders,
-          orderData.cancelledOrders,
-          orderData.completedOrders,
-          orderData.completedOnTimeOrders,
-          orderData.pickedUpOnTimeOrders
+          orderData?.totalFinishedOrders,
+          orderData?.cancelledOrders,
+          orderData?.completedOrders,
+          orderData?.completedOnTimeOrders,
+          orderData?.pickedUpOnTimeOrders
         ],
       }
     ],
@@ -101,7 +101,7 @@ const OrderCountChart: React.FC<BarChartProps> = ({ orderData }) => {
         <div id="chartTwo" className="-ml-5 -mb-9">
           <ReactApexChart
             options={options}
-            series={data.series}
+            series={data.series as any}
             type="bar"
             height={350}
           />

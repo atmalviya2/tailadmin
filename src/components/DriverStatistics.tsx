@@ -8,16 +8,20 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { DriverData } from "@/types/driver"
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 interface DriverStatisticsProps {
-  driverData: DriverData[]
+  driverData: DriverData[] | []
 }
 export const DriverStatistics: React.FC<DriverStatisticsProps> = ({ driverData }) => {
   const [sortOrder, setSortOrder] = useState<{ [key: string]: "asc" | "desc" }>(
     {},
   );
   const [sortedData, setSortedData] = useState(driverData);
+  useEffect(() => {
+    console.log("driverData infrontend", driverData)
+    setSortedData(driverData)
+  }, [driverData])
 
   const toggleSortOrder = (key: keyof DriverData) => {
     setSortOrder(prevSortOrder => {

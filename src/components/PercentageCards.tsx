@@ -3,21 +3,21 @@ import GaugeChart from "react-gauge-chart";
 import React from "react";
 import { OrderData } from "@/types/order";
 interface CompletionGaugeProps {
-  orderData: OrderData
+  orderData: OrderData | null
 }
 const CompletionGauges: React.FC<CompletionGaugeProps> = ({ orderData }) => {
   const guageData = [
     {
       title: "Cancelled Order",
-      percentage: orderData.cancelledPercentage
+      percentage: orderData?.cancelledPercentage
     },
     {
       title: "Completed On Time",
-      percentage: orderData.completedOnTimePercentage
+      percentage: orderData?.completedOnTimePercentage
     },
     {
       title: "Picked On Time",
-      percentage: orderData.pickedUpOnTimePercentage
+      percentage: orderData?.pickedUpOnTimePercentage
     }
   ]
 
@@ -34,11 +34,11 @@ const CompletionGauges: React.FC<CompletionGaugeProps> = ({ orderData }) => {
             nrOfLevels={20}
             colors={["#8083F8", "#F87070"]}
             arcWidth={0.3}
-            percent={data.percentage / 100}
+            percent={data?.percentage as number / 100}
             textColor="#000"
           />
           <p className="text-xl font-semibold mt-2">
-            {Math.round(data.percentage)}%
+            {Math.round(data?.percentage as number)}%
           </p>
         </div>
       ))}

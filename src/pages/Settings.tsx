@@ -3,46 +3,46 @@ import userThree from '../images/user/user-03.png';
 import fireToast from '../hooks/fireToast';
 import { Table } from "../components/TableSettings";
 import { Modal } from "../components/ModalSettings";
-import { useState,useEffect } from "react";
+import { useState, useEffect } from "react";
 const Settings = () => {
-  const [modalOpen, setModalOpen] = useState(false);
-  const [rows, setRows] = useState(localStorage.getItem("alertSettings")?JSON.parse(localStorage.getItem("alertSettings")):[]);
-  useEffect(() => {
-    // storing input name
-    localStorage.setItem("alertSettings", JSON.stringify(rows));
-  }, [rows]);
-  const [rowToEdit, setRowToEdit] = useState(null);
+  // const [modalOpen, setModalOpen] = useState(false);
+  // const [rows, setRows] = useState(localStorage.getItem("alertSettings") ? JSON.parse(localStorage.getItem("alertSettings")) : []);
+  // useEffect(() => {
+  //   // storing input name
+  //   localStorage.setItem("alertSettings", JSON.stringify(rows));
+  // }, [rows]);
+  // const [rowToEdit, setRowToEdit] = useState(null);
 
-  const handleDeleteRow = (targetIndex) => {
-    setRows(rows.filter((_, idx) => idx !== targetIndex));
-  };
+  // const handleDeleteRow = (targetIndex) => {
+  //   setRows(rows.filter((_, idx) => idx !== targetIndex));
+  // };
 
-  const handleEditRow = (idx) => {
-    setRowToEdit(idx);
+  // const handleEditRow = (idx) => {
+  //   setRowToEdit(idx);
 
-    setModalOpen(true);
-  };
+  //   setModalOpen(true);
+  // };
 
-  const handleSubmit = (newRow) => {
-    rowToEdit === null
-      ? setRows([...rows, newRow])
-      : setRows(
-          rows.map((currRow, idx) => {
-            if (idx !== rowToEdit) return currRow;
+  // const handleSubmit = (newRow) => {
+  //   rowToEdit === null
+  //     ? setRows([...rows, newRow])
+  //     : setRows(
+  //       rows.map((currRow, idx) => {
+  //         if (idx !== rowToEdit) return currRow;
 
-            return newRow;
-          })
-        );
-  };
+  //         return newRow;
+  //       })
+  //     );
+  // };
 
   return (
     <>
-      <div className="mx-auto max-w-270">
-        
+      <div className="container mx-auto max-w-screen-md">
+
         <Breadcrumb pageName="Settings" />
 
-        <div className="grid grid-cols-5 gap-8">
-          <div className="col-span-5 xl:col-span-3">
+        <div className="col-span-6">
+          <div className="col-span-5 xl:col-span-3 mx-auto">
             <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
               <div className="border-b border-stroke py-4 px-7 dark:border-strokedark">
                 <h3 className="font-medium text-black dark:text-white">
@@ -90,8 +90,7 @@ const Settings = () => {
                           type="text"
                           name="fullName"
                           id="fullName"
-                          placeholder="Devid Jhon"
-                          defaultValue="Devid Jhon"
+                          placeholder="Enter your full name"
                         />
                       </div>
                     </div>
@@ -108,8 +107,7 @@ const Settings = () => {
                         type="text"
                         name="phoneNumber"
                         id="phoneNumber"
-                        placeholder="+990 3343 7865"
-                        defaultValue="+990 3343 7865"
+                        placeholder="Enter your phone number"
                       />
                     </div>
                   </div>
@@ -152,8 +150,7 @@ const Settings = () => {
                         type="email"
                         name="emailAddress"
                         id="emailAddress"
-                        placeholder="devidjond45@gmail.com"
-                        defaultValue="devidjond45@gmail.com"
+                        placeholder="Enter your email address"
                       />
                     </div>
                   </div>
@@ -170,8 +167,7 @@ const Settings = () => {
                       type="text"
                       name="Username"
                       id="Username"
-                      placeholder="devidjhon24"
-                      defaultValue="devidjhon24"
+                      placeholder="Enter your username"
                     />
                   </div>
 
@@ -244,7 +240,7 @@ const Settings = () => {
               </div>
             </div>
           </div>
-          <div className="col-span-5 xl:col-span-2">
+          {/* <div className="col-span-5 xl:col-span-2">
             <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
               <div className="border-b border-stroke py-4 px-7 dark:border-strokedark">
                 <h3 className="font-medium text-black dark:text-white">
@@ -336,7 +332,7 @@ const Settings = () => {
                 </form>
               </div>
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
     </>

@@ -41,6 +41,7 @@ export const DatePickerDemo: React.FC<DatePickerDemoProps> = ({ date, onChange }
           style={{
             background: "white"
           }}
+
         />
       </PopoverContent>
     </Popover>

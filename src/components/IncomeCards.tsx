@@ -3,7 +3,7 @@
 import { PaymentData } from "@/types/payment";
 
 interface IncomeCardsProps {
-  paymentData: PaymentData
+  paymentData: PaymentData | null
 }
 const IncomeCards: React.FC<IncomeCardsProps> = ({ paymentData }) => {
   const cardData = [
