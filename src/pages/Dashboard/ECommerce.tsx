@@ -61,10 +61,6 @@ const ECommerce = () => {
       setDriverData(driverDataBack);
       setZipcodeData(zipcodeDataBack);
     }
-    console.log("orderData", orderDataBack)
-    console.log("paymentData", paymentDataBack)
-    console.log("driverData", driverDataBack)
-    console.log("zipcodeData", zipcodeDataBack)
   }, [orderDataBack, paymentDataBack, driverDataBack, zipcodeDataBack]);
   return (
     <>

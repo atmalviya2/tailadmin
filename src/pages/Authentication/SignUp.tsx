@@ -91,16 +91,12 @@ const SignUp = () => {
 
       if (!response.ok) {
         const res = await response.json();
-        const isEmailExist: boolean = res.error?.includes(
-          "EMAIL_ALREADY_TAKEN",
-        );
-
-        const isUserNameExist: boolean = res.error?.includes(
-          "USERNAME_ALREADY_TAKEN",
+        console.log("API response", res)
+        const isEmailExist: boolean = res.error?.errorResponse?.errmsg.includes(
+          "duplicate",
         );
 
         if (isEmailExist) throw new Error("EMAIL_ALREADY_TAKEN");
-        if (isUserNameExist) throw new Error("USERNAME_ALREADY_TAKEN");
         else throw new Error("Network response was not ok");
       }
 
@@ -111,23 +107,21 @@ const SignUp = () => {
       // router.push("/verify-email");
     } catch (error) {
       if (error instanceof Error) {
+        console.log("errr", error)
         errorHandler(error);
-        // const message = error.message;
+        const message = error.message;
+        console.log("errmessage", message)
 
-        //   if (message.includes("EMAIL_ALREADY_TAKEN")) {
-        //     toast(t('toasts.emailExists'), { type: "error" });
-        //   } else if (message.includes("USERNAME_ALREADY_TAKEN")) {
-        //     toast(t('toasts.usernameExists'), { type: "error" });
-        //   } else {
-        //     toast(t('toasts.failed'), { type: "error" });
-        //   }
-        // } else {
-        //   toast(t('toasts.failed'), { type: "error" });
-        // }
-        console.error(error);
+        if (message.includes("EMAIL_ALREADY_TAKEN")) {
+          toast("Email Duplication Error", { type: "error" });
+        } else {
+          toast("Network Error", { type: "error" });
+        }
+      } else {
+        toast("Registration Failed", { type: "error" });
       }
-    };
-
+      console.error(error);
+    }
   };
   return (
     <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark h-full">
