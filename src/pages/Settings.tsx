@@ -4,6 +4,7 @@ import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { personalInfoSchema, passwordSchema } from '../yupSchema';
+import { useUser } from '../contexts/UserContext';
 
 
 type PersonalInfoFormData = yup.InferType<typeof personalInfoSchema>;
@@ -40,6 +41,8 @@ const Settings = () => {
   //     );
   // };
 
+  const { user } = useUser();
+
   // Currently storing default values for the form 
   // TODO: use the user's data from the database
   const {
@@ -50,8 +53,8 @@ const Settings = () => {
   } = useForm<PersonalInfoFormData>({
     resolver: yupResolver(personalInfoSchema),
     defaultValues: {
-      username: 'atmalviya',
-      email: 'atmalviya@gmail.com'
+      username: user?.username || '',
+      email: user?.email || ''
     }
   });
 

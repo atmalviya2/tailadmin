@@ -24,7 +24,7 @@ interface UserManagementProps {
   userData: UserData[] | [];
 }
 
-const UserManagement: React.FC<UserManagementProps> = () => {
+const UserManagement: React.FC = () => {
   const userData: UserData[] = [
     { email: 'john.doe@example.com', isApproved: true, id: 1 },
     { email: 'jane.smith@example.com', isApproved: false, id: 2 },
@@ -39,9 +39,9 @@ const UserManagement: React.FC<UserManagementProps> = () => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [isResetPasswordDialogOpen, setIsResetPasswordDialogOpen] = useState(false);
 
-  // useEffect(() => {
-  //   setSortedData(userData);
-  // }, [userData]);
+  useEffect(() => {
+    // TODO: Fetch user data from API
+  }, []);
 
   const toggleSortOrder = (key: keyof UserData) => {
     setSortOrder((prevSortOrder) => {
