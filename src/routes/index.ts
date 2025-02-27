@@ -8,7 +8,7 @@ const Profile = lazy(() => import('../pages/Profile'));
 const Settings = lazy(() => import('../pages/Settings'));
 const Alerts = lazy(() => import('../pages/UiElements/Alerts'));
 const Buttons = lazy(() => import('../pages/UiElements/Buttons'));
-
+const UserManagement = lazy(() => import('../pages/UserManagement/UserManagement'));
 const coreRoutes = [
   {
     path: '/calendar',
@@ -49,6 +49,11 @@ const coreRoutes = [
     path: '/ui/buttons',
     title: 'Buttons',
     component: Buttons,
+  },
+  {
+    path: '/manageuser',
+    title: 'Manage User',
+    component: UserManagement,
   },
 ];
 
