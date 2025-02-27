@@ -1,6 +1,7 @@
 import { Suspense, lazy, useEffect, useState } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
+import { UserProvider } from './contexts/UserContext';
 
 import ECommerce from './pages/Dashboard/ECommerce';
 import SignIn from './pages/Authentication/SignIn';
@@ -20,7 +21,7 @@ function App() {
   return loading ? (
     <Loader />
   ) : (
-    <>
+    <UserProvider>
       <Toaster
         position="top-right"
         reverseOrder={false}
@@ -47,7 +48,7 @@ function App() {
           })}
         </Route>
       </Routes>
-    </>
+    </UserProvider>
   );
 }
 

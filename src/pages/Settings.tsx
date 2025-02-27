@@ -1,9 +1,15 @@
 import Breadcrumb from '../components/Breadcrumb';
-import userThree from '../images/user/user-03.png';
 import fireToast from '../hooks/fireToast';
-import { Table } from "../components/TableSettings";
-import { Modal } from "../components/ModalSettings";
-import { useState, useEffect } from "react";
+import { useForm } from 'react-hook-form';
+import * as yup from 'yup';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { personalInfoSchema, passwordSchema } from '../yupSchema';
+import { useUser } from '../contexts/UserContext';
+
+
+type PersonalInfoFormData = yup.InferType<typeof personalInfoSchema>;
+type PasswordFormData = yup.InferType<typeof passwordSchema>;
+
 const Settings = () => {
   // const [modalOpen, setModalOpen] = useState(false);
   // const [rows, setRows] = useState(localStorage.getItem("alertSettings") ? JSON.parse(localStorage.getItem("alertSettings")) : []);
@@ -35,6 +41,48 @@ const Settings = () => {
   //     );
   // };
 
+  const { user } = useUser();
+
+  // Currently storing default values for the form 
+  // TODO: use the user's data from the database
+  const {
+    register: registerPersonal,
+    handleSubmit: handleSubmitPersonal,
+    reset: resetPersonal,
+    formState: { errors: personalErrors, isDirty: isPersonalFormDirty }
+  } = useForm<PersonalInfoFormData>({
+    resolver: yupResolver(personalInfoSchema),
+    defaultValues: {
+      username: user?.username || '',
+      email: user?.email || ''
+    }
+  });
+
+  const {
+    register: registerPassword,
+    handleSubmit: handleSubmitPassword,
+    reset: resetPassword,
+    formState: { errors: passwordErrors, isDirty: isPasswordFormDirty }
+  } = useForm<PasswordFormData>({
+    resolver: yupResolver(passwordSchema),
+    defaultValues: {
+      currentPassword: '',
+      newPassword: ''
+    }
+  });
+
+  const onSubmitPersonal = (data: PersonalInfoFormData) => {
+    console.log('Personal Info data:', data);
+    fireToast();
+    resetPersonal();
+  };
+
+  const onSubmitPassword = (data: PasswordFormData) => {
+    console.log('Password reset data:', data);
+    fireToast();
+    resetPassword();
+  };
+
   return (
     <>
       <div className="container mx-auto max-w-screen-md">
@@ -50,8 +98,9 @@ const Settings = () => {
                 </h3>
               </div>
               <div className="p-7">
-                <form action="#">
-                  <div className="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
+                <form onSubmit={handleSubmitPersonal(onSubmitPersonal)}>
+                  {/* Full Name and Phone Number are hide*/}
+                  {/* <div className="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
                     <div className="w-full sm:w-1/2">
                       <label
                         className="mb-3 block text-sm font-medium text-black dark:text-white"
@@ -110,12 +159,31 @@ const Settings = () => {
                         placeholder="Enter your phone number"
                       />
                     </div>
-                  </div>
+                  </div> */}
 
                   <div className="mb-5.5">
                     <label
                       className="mb-3 block text-sm font-medium text-black dark:text-white"
-                      htmlFor="emailAddress"
+                      htmlFor="username"
+                    >
+                      Username
+                    </label>
+                    <input
+                      className="w-full rounded border border-stroke bg-gray py-3 px-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
+                      type="text"
+                      {...registerPersonal('username')}
+                      placeholder="Enter your username"
+                    />
+                    {personalErrors.username && (
+                      <p className="text-danger text-sm mt-1">
+                        {personalErrors.username.message}
+                      </p>
+                    )}
+                  </div>
+                  <div className="mb-5.5">
+                    <label
+                      className="mb-3 block text-sm font-medium text-black dark:text-white"
+                      htmlFor="email"
                     >
                       Email Address
                     </label>
@@ -148,30 +216,20 @@ const Settings = () => {
                       <input
                         className="w-full rounded border border-stroke bg-gray py-3 pl-11.5 pr-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
                         type="email"
-                        name="emailAddress"
-                        id="emailAddress"
+                        {...registerPersonal('email')}
                         placeholder="Enter your email address"
                       />
                     </div>
+                    {personalErrors.email && (
+                      <p className="text-danger text-sm mt-1">
+                        {personalErrors.email.message}
+                      </p>
+                    )}
                   </div>
 
-                  <div className="mb-5.5">
-                    <label
-                      className="mb-3 block text-sm font-medium text-black dark:text-white"
-                      htmlFor="Username"
-                    >
-                      Username
-                    </label>
-                    <input
-                      className="w-full rounded border border-stroke bg-gray py-3 px-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
-                      type="text"
-                      name="Username"
-                      id="Username"
-                      placeholder="Enter your username"
-                    />
-                  </div>
 
-                  <div className="mb-5.5">
+
+                  {/* <div className="mb-5.5">
                     <label
                       className="mb-3 block text-sm font-medium text-black dark:text-white"
                       htmlFor="Username"
@@ -219,23 +277,93 @@ const Settings = () => {
                         defaultValue="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque posuere fermentum urna, eu condimentum mauris tempus ut. Donec fermentum blandit aliquet."
                       ></textarea>
                     </div>
+                  </div> */}
+
+                  {isPersonalFormDirty && (
+                    <div className="flex justify-end gap-4.5">
+                      <button
+                        className="flex justify-center rounded border border-stroke py-2 px-6 font-medium text-black hover:shadow-1 dark:border-strokedark dark:text-white"
+                        type="button"
+                        onClick={() => resetPersonal()}
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        className="flex justify-center rounded bg-primary py-2 px-6 font-medium text-gray hover:shadow-1"
+                        type="submit"
+                      >
+                        Save Changes
+                      </button>
+                    </div>
+                  )}
+                </form>
+              </div>
+            </div>
+            <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark my-4">
+              <div className="border-b border-stroke py-4 px-7 dark:border-strokedark">
+                <h3 className="font-medium text-black dark:text-white">
+                  Password
+                </h3>
+              </div>
+              <div className="p-7">
+                <form onSubmit={handleSubmitPassword(onSubmitPassword)}>
+                  <div className="mb-5.5">
+                    <label
+                      className="mb-3 block text-sm font-medium text-black dark:text-white"
+                      htmlFor="currentPassword"
+                    >
+                      Current Password
+                    </label>
+                    <input
+                      className="w-full rounded border border-stroke bg-gray py-3 px-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
+                      type="password"
+                      placeholder="Enter your current password"
+                      {...registerPassword('currentPassword')}
+                    />
+                    {passwordErrors.currentPassword && (
+                      <p className="text-danger text-sm mt-1">
+                        {passwordErrors.currentPassword.message}
+                      </p>
+                    )}
                   </div>
 
-                  <div className="flex justify-end gap-4.5">
-                    <button
-                      className="flex justify-center rounded border border-stroke py-2 px-6 font-medium text-black hover:shadow-1 dark:border-strokedark dark:text-white"
-                      type="submit"
+                  <div className="mb-5.5">
+                    <label
+                      className="mb-3 block text-sm font-medium text-black dark:text-white"
+                      htmlFor="newPassword"
                     >
-                      Cancel
-                    </button>
-                    <button
-                      className="flex justify-center rounded bg-primary py-2 px-6 font-medium text-gray hover:shadow-1"
-                      type="submit"
-                      onClick={fireToast}
-                    >
-                      Save
-                    </button>
+                      New Password
+                    </label>
+                    <input
+                      className="w-full rounded border border-stroke bg-gray py-3 px-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
+                      type="password"
+                      placeholder="Enter your new password"
+                      {...registerPassword('newPassword')}
+                    />
+                    {passwordErrors.newPassword && (
+                      <p className="text-danger text-sm mt-1">
+                        {passwordErrors.newPassword.message}
+                      </p>
+                    )}
                   </div>
+
+                  {isPasswordFormDirty && (
+                    <div className="flex justify-end gap-4.5">
+                      <button
+                        className="flex justify-center rounded border border-stroke py-2 px-6 font-medium text-black hover:shadow-1 dark:border-strokedark dark:text-white"
+                        type="button"
+                        onClick={() => resetPassword()}
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        className="flex justify-center rounded bg-primary py-2 px-6 font-medium text-gray hover:shadow-1"
+                        type="submit"
+                      >
+                        Reset Password
+                      </button>
+                    </div>
+                  )}
                 </form>
               </div>
             </div>

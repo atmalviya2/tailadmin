@@ -1,4 +1,5 @@
 import { lazy } from 'react';
+import AdminRoute from '../components/AdminRoute';
 
 const Calendar = lazy(() => import('../pages/Calendar'));
 const Chart = lazy(() => import('../pages/Chart'));
@@ -53,7 +54,7 @@ const coreRoutes = [
   {
     path: '/manageuser',
     title: 'Manage User',
-    component: UserManagement,
+    component: AdminRoute(UserManagement),
   },
 ];
 

@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import Logo from '../images/logo/logo.svg';
 import SidebarLinkGroup from './SidebarLinkGroup';
+import { useUser } from '../contexts/UserContext';
 
 interface SidebarProps {
   sidebarOpen: boolean;
@@ -11,6 +12,7 @@ interface SidebarProps {
 const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
   const location = useLocation();
   const { pathname } = location;
+  const { user } = useUser();
 
   const trigger = useRef<any>(null);
   const sidebar = useRef<any>(null);
@@ -153,6 +155,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                 </NavLink>
               </li>
                 {/* <!-- Menu Manage Users  --> */}
+            {user?.isAdmin && (
               <li>
                 <NavLink
                   to="/manageuser"
@@ -164,6 +167,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                   Manage Users
                 </NavLink>
               </li>
+            )}
               {/* <!-- Menu Item Settings --> */}
               <li>
                 <NavLink

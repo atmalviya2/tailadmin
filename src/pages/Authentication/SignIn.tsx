@@ -1,8 +1,27 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import LogoDark from '../../images/logo/logo-dark.svg';
 import Logo from '../../images/logo/logo.svg';
 import AuthImage from '../../images/icon/auth-img.svg';
+import { useUser } from '../../contexts/UserContext';
+
 const SignIn = () => {
+  const { setUser } = useUser();
+  const navigate = useNavigate();
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    const formData = new FormData(e.target as HTMLFormElement);
+    const userData = {
+      username: formData.get('username')?.toString() || 'atmalviya',
+      email: formData.get('email')?.toString() || 'atmalviya@gmail.com',
+      isAdmin: true,
+    };
+
+    setUser(userData);
+    navigate('/', { replace: true });
+  };
+
   return (
     <>
       <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
@@ -33,7 +52,7 @@ const SignIn = () => {
                 Sign In to TailAdmin
               </h2>
 
-              <form>
+              <form onSubmit={handleSubmit}>
                 <div className="mb-4">
                   <label className="mb-2.5 block font-medium text-black dark:text-white">
                     Email
@@ -101,11 +120,12 @@ const SignIn = () => {
                 </div>
 
                 <div className="mb-5">
-                  <input
+                  <button
                     type="submit"
-                    value="Sign In"
-                    className="w-full cursor-pointer rounded-lg border border-primary bg-primary p-4 text-white transition hover:bg-opacity-90"
-                  />
+                    className="flex w-full justify-center rounded bg-primary p-3 font-medium text-gray"
+                  >
+                    Sign In
+                  </button>
                 </div>
 
                 <div className="mt-6 text-center">
