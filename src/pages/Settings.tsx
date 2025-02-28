@@ -6,6 +6,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { personalInfoSchema, passwordSchema } from '../yupSchema';
 import { useUser } from '../contexts/UserContext';
 import { useUsers } from '../hooks/useUsers';
+import { useEffect } from 'react';
 
 
 type PersonalInfoFormData = yup.InferType<typeof personalInfoSchema>;
@@ -43,7 +44,7 @@ const Settings = () => {
   // };
 
   const { user } = useUser();
-  const { updateProfile, isUpdatingProfile, updatePassword, isUpdatingPassword } = useUsers();
+  const { updateProfile, isUpdatingProfile, updatePassword, isUpdatingPassword, userDetails, isLoadingUser } = useUsers();
 
   const {
     register: registerPersonal,
@@ -53,13 +54,23 @@ const Settings = () => {
   } = useForm<PersonalInfoFormData>({
     resolver: yupResolver(personalInfoSchema),
     defaultValues: {
-      username: user?.userName || '',
-      email: user?.email || '',
-      fullName: user?.fullName || '',
-      phoneNumber: user?.phoneNumber || ''
+      username: userDetails?.userName || '',
+      email: userDetails?.email || '',
+      fullName: userDetails?.fullName || '',
+      phoneNumber: userDetails?.phoneNumber || ''
     }
   });
 
+  useEffect(() => {
+    if (userDetails) {
+      resetPersonal({
+        username: userDetails.userName || '',
+        email: userDetails.email || '',
+        fullName: userDetails.fullName || '',
+        phoneNumber: userDetails.phoneNumber || ''
+      });
+    }
+  }, [userDetails, resetPersonal]);
   const {
     register: registerPassword,
     handleSubmit: handleSubmitPassword,
@@ -68,23 +79,29 @@ const Settings = () => {
   } = useForm<PasswordFormData>({
     resolver: yupResolver(passwordSchema),
     defaultValues: {
-      currentPassword: '',
-      newPassword: ''
+      newPassword: '',
+      confirmPassword: ''
     }
   });
 
   const onSubmitPersonal = (data: PersonalInfoFormData) => {
+    if (!user?._id) return; 
     updateProfile({
+      _id: user._id,
       username: data.username,
+      email: data.email,
       fullName: data.fullName,
       phoneNumber: data.phoneNumber,
     });
   };
 
   const onSubmitPassword = (data: PasswordFormData) => {
+    if (!user?._id) return;
+    
     updatePassword({
-      currentPassword: data.currentPassword,
+      _id: user._id,
       newPassword: data.newPassword,
+      confirmPassword: data.confirmPassword,
     });
     resetPassword();
   };
@@ -324,26 +341,6 @@ const Settings = () => {
                   <div className="mb-5.5">
                     <label
                       className="mb-3 block text-sm font-medium text-black dark:text-white"
-                      htmlFor="currentPassword"
-                    >
-                      Current Password
-                    </label>
-                    <input
-                      className="w-full rounded border border-stroke bg-gray py-3 px-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
-                      type="password"
-                      placeholder="Enter your current password"
-                      {...registerPassword('currentPassword')}
-                    />
-                    {passwordErrors.currentPassword && (
-                      <p className="text-danger text-sm mt-1">
-                        {passwordErrors.currentPassword.message}
-                      </p>
-                    )}
-                  </div>
-
-                  <div className="mb-5.5">
-                    <label
-                      className="mb-3 block text-sm font-medium text-black dark:text-white"
                       htmlFor="newPassword"
                     >
                       New Password
@@ -357,6 +354,26 @@ const Settings = () => {
                     {passwordErrors.newPassword && (
                       <p className="text-danger text-sm mt-1">
                         {passwordErrors.newPassword.message}
+                      </p>
+                    )}
+                  </div>
+
+                  <div className="mb-5.5">
+                    <label
+                      className="mb-3 block text-sm font-medium text-black dark:text-white"
+                      htmlFor="confirmPassword"
+                    >
+                      Confirm Password
+                    </label>
+                    <input
+                      className="w-full rounded border border-stroke bg-gray py-3 px-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
+                      type="password"
+                      placeholder="Confirm your new password"
+                      {...registerPassword('confirmPassword')}
+                    />
+                    {passwordErrors.confirmPassword && (
+                      <p className="text-danger text-sm mt-1">
+                        {passwordErrors.confirmPassword.message}
                       </p>
                     )}
                   </div>

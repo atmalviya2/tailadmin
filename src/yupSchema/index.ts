@@ -1,16 +1,14 @@
 import * as yup from 'yup'
 
-export const passwordSchema = yup.object({
-  currentPassword: yup.string()
-    .required('Current password is required')
-    .min(6, 'Password must be at least 6 characters'),
-  newPassword: yup.string()
+export const passwordSchema = yup.object().shape({
+  newPassword: yup
+    .string()
     .required('New password is required')
-    .min(6, 'Password must be at least 6 characters')
-    .matches(
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/,
-      'Password must contain at least one uppercase letter, one lowercase letter, and one number'
-    ),
+    .min(6, 'Password must be at least 6 characters'),
+  confirmPassword: yup
+    .string()
+    .required('Please confirm your password')
+    .oneOf([yup.ref('newPassword')], 'Passwords must match')
 });
 
 export const personalInfoSchema = yup.object({
@@ -21,12 +19,6 @@ export const personalInfoSchema = yup.object({
   email: yup.string()
     .required('Email is required')
     .email('Please enter a valid email address'),
-  fullName: yup.string()
-    .required('Full name is required')
-    .min(3, 'Full name must be at least 3 characters')
-    .max(50, 'Full name must not exceed 50 characters'),
+  fullName: yup.string(),
   phoneNumber: yup.string()
-    .required('Phone number is required')
-    .matches(/^[0-9+\-\s()]*$/, 'Invalid phone number format')
-    .min(10, 'Phone number must be at least 10 characters')
 });

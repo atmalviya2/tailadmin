@@ -46,9 +46,9 @@ export const authService = {
 
   login: async (data: LoginData) => {
     const response = await axiosInstance.post('/api/users/login', data);
-    if (response.data.token) {
-      Cookies.set('token', response.data.token);
-    }
-    return response.data;
+    return {
+      user: response.data.user,
+      token: response.data.token
+    };
   },
 }; 
