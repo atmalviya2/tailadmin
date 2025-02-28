@@ -1,14 +1,14 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
-import { useUser } from '../contexts/UserContext';
+// import { useUser } from '../contexts/UserContext';
 
 import UserOne from '../images/user/user-01.png';
 
 const DropdownUser = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const { logout } = useAuth();
-  const { user } = useUser();
+  // const { user } = useUser();
 
   const trigger = useRef<any>(null);
   const dropdown = useRef<any>(null);

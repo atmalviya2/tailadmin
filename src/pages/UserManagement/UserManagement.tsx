@@ -146,7 +146,7 @@ const UserManagement = () => {
             <Button variant="outline" onClick={() => setIsResetPasswordDialogOpen(false)}>
               Cancel
             </Button>
-            <Button onClick={confirmResetPassword}>
+            <Button onClick={confirmResetPassword} variant="default">
               Reset Password
             </Button>
           </DialogFooter>
