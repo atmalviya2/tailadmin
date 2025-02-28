@@ -25,8 +25,10 @@ axiosInstance.interceptors.response.use(
       const status = error.response.status;
       const currentPath = window.location.pathname;
       const publicPaths = [
-        '/signin',
-        '/register',
+        '/auth/signin',
+        '/auth/signup',
+        '/auth/verification-pending',
+        '/auth/verify-email',
       ];
 
       const isPublicPath = publicPaths.some(path =>
@@ -38,7 +40,7 @@ axiosInstance.interceptors.response.use(
           Cookies.remove("token");
           // Redirect instead of reload to prevent loops
           const returnTo = encodeURIComponent(currentPath);
-          window.location.href = `/signin?returnTo=${returnTo}`;
+          window.location.href = `/auth/signin?returnTo=${returnTo}`;
         }
       }
     }

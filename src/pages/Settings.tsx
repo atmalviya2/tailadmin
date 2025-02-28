@@ -5,6 +5,7 @@ import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { personalInfoSchema, passwordSchema } from '../yupSchema';
 import { useUser } from '../contexts/UserContext';
+import { useUsers } from '../hooks/useUsers';
 
 
 type PersonalInfoFormData = yup.InferType<typeof personalInfoSchema>;
@@ -42,6 +43,7 @@ const Settings = () => {
   // };
 
   const { user } = useUser();
+  const { updateProfile, isUpdatingProfile, updatePassword, isUpdatingPassword } = useUsers();
 
   const {
     register: registerPersonal,
@@ -72,14 +74,18 @@ const Settings = () => {
   });
 
   const onSubmitPersonal = (data: PersonalInfoFormData) => {
-    console.log('Personal Info data:', data);
-    fireToast();
-    resetPersonal();
+    updateProfile({
+      username: data.username,
+      fullName: data.fullName,
+      phoneNumber: data.phoneNumber,
+    });
   };
 
   const onSubmitPassword = (data: PasswordFormData) => {
-    console.log('Password reset data:', data);
-    fireToast();
+    updatePassword({
+      currentPassword: data.currentPassword,
+      newPassword: data.newPassword,
+    });
     resetPassword();
   };
 
@@ -296,10 +302,11 @@ const Settings = () => {
                         Cancel
                       </button>
                       <button
-                        className="flex justify-center rounded bg-primary py-2 px-6 font-medium text-gray hover:shadow-1"
+                        className="flex justify-center rounded bg-primary py-2 px-6 font-medium text-gray hover:bg-opacity-70"
                         type="submit"
+                        disabled={isUpdatingProfile || !isPersonalFormDirty}
                       >
-                        Save Changes
+                        {isUpdatingProfile ? 'Saving...' : 'Save'}
                       </button>
                     </div>
                   )}
@@ -366,8 +373,9 @@ const Settings = () => {
                       <button
                         className="flex justify-center rounded bg-primary py-2 px-6 font-medium text-gray hover:shadow-1"
                         type="submit"
+                        disabled={isUpdatingPassword || !isPasswordFormDirty}
                       >
-                        Reset Password
+                        {isUpdatingPassword ? 'Updating...' : 'Reset Password'}
                       </button>
                     </div>
                   )}
