@@ -7,8 +7,6 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { UserData } from '@/types/users';
-import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -18,55 +16,23 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
+import { useState } from 'react';
+import { useUsers } from '@/hooks/useUsers';
+import { Loader2 } from 'lucide-react';
+import { Switch } from '@/components/ui/switch1';
+import { UserData } from '@/types/users'; 
 
-
-interface UserManagementProps {
-  userData: UserData[] | [];
-}
-
-const UserManagement: React.FC = () => {
-  const userData: UserData[] = [
-    { email: 'john.doe@example.com', isApproved: true, id: 1 },
-    { email: 'jane.smith@example.com', isApproved: false, id: 2 },
-    { email: 'mike.wilson@example.com', isApproved: true, id: 3 },
-    { email: 'sarah.brown@example.com', isApproved: false, id: 4 },
-  ];
-  const [sortOrder, setSortOrder] = useState<{ [key: string]: 'asc' | 'desc' }>(
-    {},
-  );
-  const [sortedData, setSortedData] = useState(userData);
+const UserManagement = () => {
+  const { users, isLoading, deleteUser, resetPassword, updateUserStatus, isUpdatingStatus } = useUsers();
   const [selectedUser, setSelectedUser] = useState<UserData | null>(null);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [isResetPasswordDialogOpen, setIsResetPasswordDialogOpen] = useState(false);
 
-  useEffect(() => {
-    // TODO: Fetch user data from API
-  }, []);
-
-  const toggleSortOrder = (key: keyof UserData) => {
-    setSortOrder((prevSortOrder) => {
-      const newOrder = prevSortOrder[key] === 'asc' ? 'desc' : 'asc';
-      return {
-        ...prevSortOrder,
-        [key]: newOrder,
-      };
-    });
-
-    setSortedData((prevData) => {
-      const orderMultiplier = sortOrder[key] === 'asc' ? 1 : -1;
-      return prevData.sort((a, b) => {
-        if (a[key] < b[key]) return -1 * orderMultiplier;
-        if (a[key] > b[key]) return 1 * orderMultiplier;
-        return 0;
-      });
-    });
-  };
-
+  console.log(users)
   const handleDeleteUser = (user: UserData) => {
     setSelectedUser(user);
     setIsDeleteDialogOpen(true);
   };
-
 
   const handleResetPassword = (user: UserData) => {
     setSelectedUser(user);
@@ -75,18 +41,29 @@ const UserManagement: React.FC = () => {
 
   const confirmDelete = () => {
     if (selectedUser) {
-      console.log('Deleting user:', selectedUser.id);
-      setSortedData(sortedData.filter(user => user.id !== selectedUser.id));
+      deleteUser(selectedUser._id);
     }
     setIsDeleteDialogOpen(false);
   };
 
   const confirmResetPassword = () => {
     if (selectedUser) {
-      console.log('Resetting password for user:', selectedUser.id);
+      resetPassword(selectedUser._id);
     }
     setIsResetPasswordDialogOpen(false);
   };
+
+  const handleStatusChange = (userId: string, isApproved: boolean) => {
+    updateUserStatus({ userId, isApproved });
+  };
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-full">
+        <Loader2 className="w-8 h-8 animate-spin" />
+      </div>
+    );
+  }
 
   return (
     <>
@@ -98,41 +75,32 @@ const UserManagement: React.FC = () => {
         <TableHeader>
           <TableRow>
             <TableHead className="w-[50px]">No</TableHead>
-            <TableHead className="w-[200px]">
-              <div className="flex items-center gap-1.5">
-                <img
-                  src="/assets/compare-arrows.svg"
-                  alt="icon"
-                  width={19}
-                  height={19}
-                  onClick={() => toggleSortOrder('email')}
-                  className="cursor-pointer"
-                />
-                Email
-              </div>
-            </TableHead>
-            <TableHead>Approve</TableHead>
-            <TableHead>Reset Password</TableHead>
-            <TableHead>Delete User</TableHead>
+            <TableHead>Email</TableHead>
+            <TableHead>User Name</TableHead>
+            <TableHead>Status</TableHead>
+            <TableHead>Actions</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
-          {sortedData.slice(0, 10).map((user, index) => (
-            <TableRow key={user.id}>
+          {users?.map((user: UserData, index: number) => (
+            <TableRow key={user._id}>
               <TableCell className="font-medium">{index + 1}</TableCell>
               <TableCell>{user.email}</TableCell>
+              <TableCell>{user.userName || '-'}</TableCell>
               <TableCell>
-                  {user.isApproved ? 'Approved' : 'Pending'}
+                <Switch
+                  checked={user._verified}
+                  disabled={isUpdatingStatus}
+                  onCheckedChange={(checked) => handleStatusChange(user._id, checked)}
+                />
               </TableCell>
-              <TableCell>
+              <TableCell className="space-x-2">
                 <Button
                   variant="outline"
                   onClick={() => handleResetPassword(user)}
                 >
-                  Reset
+                  Reset Password
                 </Button>
-              </TableCell>
-              <TableCell>
                 <Button
                   variant="destructive"
                   onClick={() => handleDeleteUser(user)}
@@ -165,7 +133,6 @@ const UserManagement: React.FC = () => {
         </DialogContent>
       </Dialog>
 
-
       {/* Reset Password Confirmation Dialog */}
       <Dialog open={isResetPasswordDialogOpen} onOpenChange={setIsResetPasswordDialogOpen}>
         <DialogContent>
@@ -179,7 +146,7 @@ const UserManagement: React.FC = () => {
             <Button variant="outline" onClick={() => setIsResetPasswordDialogOpen(false)}>
               Cancel
             </Button>
-            <Button onClick={confirmResetPassword} variant="destructive" className="bg-red-500 hover:bg-red-600">
+            <Button onClick={confirmResetPassword} variant="default">
               Reset Password
             </Button>
           </DialogFooter>

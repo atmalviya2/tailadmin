@@ -1,7 +1,6 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import Logo from '../images/logo/logo.svg';
-import SidebarLinkGroup from './SidebarLinkGroup';
 import { useUser } from '../contexts/UserContext';
 
 interface SidebarProps {
@@ -155,7 +154,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                 </NavLink>
               </li>
                 {/* <!-- Menu Manage Users  --> */}
-            {user?.isAdmin && (
+            {user?.role === 'admin' && (
               <li>
                 <NavLink
                   to="/manageuser"

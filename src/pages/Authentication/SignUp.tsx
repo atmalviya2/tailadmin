@@ -1,4 +1,4 @@
-import { Card, CardContent, CardTitle } from "@/components/ui/card";
+// import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import {
   Form,
   FormControl,
@@ -12,7 +12,6 @@ import * as yup from "yup";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Button } from "@/components/ui/button";
-import { toast } from "react-toastify";
 import { PasswordInput } from "@/components/ui/password-input";
 import {
   Tooltip,
@@ -21,12 +20,15 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tootip";
 import { Link } from "react-router-dom";
-import { errorHandler } from "@/lib/error-handler";
+// import { errorHandler } from "@/lib/error-handler";
+import AuthLayout from '../../layout/AuthLayout';
+import { useAuth } from '../../hooks/useAuth';
 
-import LogoDark from '@/images/logo/logo-dark.svg';
-import Logo from '@/images/logo/logo.svg';
-import AuthImage from '@/images/icon/auth-img.svg';
+// import LogoDark from '@/images/logo/logo-dark.svg';
+// import Logo from '@/images/logo/logo.svg';
+// import AuthImage from '@/images/icon/auth-img.svg';
 import InfoIcon from '@/images/icon/info.svg'
+
 interface RegisterFormData {
   email: string;
   password: string;
@@ -35,6 +37,7 @@ interface RegisterFormData {
 }
 
 const SignUp = () => {
+  const { register, isRegistering } = useAuth();
   const RegisterSchema = yup.object().shape({
     username: yup
       .string()
@@ -68,90 +71,21 @@ const SignUp = () => {
     },
   });
 
-  const onSubmit = async (data: RegisterFormData) => {
-    const { email, password, username } = data;
-    console.log(data, "data==");
+  const onSubmit = (data: RegisterFormData) => {
+    // set the email to the session storage for verification pending page
+    // Currently Email varification is not required
+    // sessionStorage.setItem('pendingVerificationEmail', data.email);
+    register({ email: data.email, password: data.password, username: data.username });
 
-    try {
-      const response = await fetch(
-        `https://wctogoreports.com/api/users/register`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            role: "user",
-            name: username,
-            email,
-            password,
-          }),
-        },
-      );
-
-      if (!response.ok) {
-        const res = await response.json();
-        console.log("API response", res)
-        const isEmailExist: boolean = res.error?.errorResponse?.errmsg.includes(
-          "duplicate",
-        );
-
-        if (isEmailExist) throw new Error("EMAIL_ALREADY_TAKEN");
-        else throw new Error("Network response was not ok");
-      }
-
-      toast("Registration Successful", {
-        type: "success",
-      });
-
-      // router.push("/verify-email");
-    } catch (error) {
-      if (error instanceof Error) {
-        console.log("errr", error)
-        errorHandler(error);
-        const message = error.message;
-        console.log("errmessage", message)
-
-        if (message.includes("EMAIL_ALREADY_TAKEN")) {
-          toast("Email Duplication Error", { type: "error" });
-        } else {
-          toast("Network Error", { type: "error" });
-        }
-      } else {
-        toast("Registration Failed", { type: "error" });
-      }
-      console.error(error);
-    }
+    // navigate('/auth/signin');
+  
+    // navigate('/auth/verification-pending');
   };
+
   return (
-    <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark h-full">
-      <div className="flex flex-wrap items-center h-full">
-        <div className="hidden w-full xl:block xl:w-1/2">
-          <div className="py-17.5 px-26 text-center">
-            <Link className="mb-5.5 inline-block" to="/">
-              <img className="hidden dark:block" src={Logo} alt="Logo" />
-              <img className="dark:hidden" src={LogoDark} alt="Logo" />
-            </Link>
-
-            <p className="2xl:px-20">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit
-              suspendisse.
-            </p>
-
-            <span className="mt-15 inline-block">
-              <img src={AuthImage} alt='auth image' />
-
-            </span>
-          </div>
-        </div>
-        <Card className="flex flex-col gap-2 px-5 py-0 pt-5 font-[family-name:var(--font-nunito)] lg:w-[496px] bg-white">
-          <CardTitle className="text-[32px] text-black">Sign Up for Delivery Dashboard</CardTitle>
-          <CardContent className="mx-0 mb-0 px-0 pb-5">
-            <Form {...form}>
-              <form
-                className="flex flex-col gap-2"
-                onSubmit={form.handleSubmit(onSubmit)}
-              >
+    <AuthLayout title="Sign Up for Delivery Dashboard">
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)}>
                 <FormField
                   control={form.control}
                   name="email"
@@ -254,12 +188,12 @@ const SignUp = () => {
                 />
                 <Button
                   type="submit"
+                  disabled={isRegistering}
                   className="w-full cursor-pointer rounded-lg border border-primary bg-primary p-4 text-white transition hover:bg-opacity-90"
                 >
-                  Register
+                  {isRegistering ? 'Registering...' : 'Register'}
                 </Button>
               </form>
-            </Form>
             <div className="flex justify-between mt-2 text-sm font-semibold ">
               <p className="w-fit ml-2">
                 Already have an account?
@@ -268,10 +202,9 @@ const SignUp = () => {
                 {" "} Log in
               </Link>
             </div>
-          </CardContent>
-        </Card>
-      </div>
-    </div>
+      </Form>
+    </AuthLayout>
   );
 };
+
 export default SignUp;

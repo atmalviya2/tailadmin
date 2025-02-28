@@ -24,21 +24,26 @@ axiosInstance.interceptors.response.use(
     if (error.response) {
       const status = error.response.status;
       const currentPath = window.location.pathname;
+      console.log("current path", currentPath)
       const publicPaths = [
-        '/signin',
-        '/register',
+        '/auth/signin',
+        '/auth/signup',
+        '/auth/verification-pending',
+        '/auth/verify-email',
       ];
 
       const isPublicPath = publicPaths.some(path =>
-        currentPath === path || currentPath.startsWith(path + '/')
+        currentPath === path || currentPath.startsWith(path + '/' || path + '?')
       );
 
       if (status === 401 || status === 403) {
         if (!isPublicPath) {
           Cookies.remove("token");
+          localStorage.removeItem("user");
+
           // Redirect instead of reload to prevent loops
           const returnTo = encodeURIComponent(currentPath);
-          window.location.href = `/signin?returnTo=${returnTo}`;
+          window.location.href = `/auth/signin?returnTo=${returnTo}`;
         }
       }
     }

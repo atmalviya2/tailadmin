@@ -5,6 +5,8 @@ import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { personalInfoSchema, passwordSchema } from '../yupSchema';
 import { useUser } from '../contexts/UserContext';
+import { useUsers } from '../hooks/useUsers';
+import { useEffect } from 'react';
 
 
 type PersonalInfoFormData = yup.InferType<typeof personalInfoSchema>;
@@ -42,9 +44,8 @@ const Settings = () => {
   // };
 
   const { user } = useUser();
+  const { updateProfile, isUpdatingProfile, updatePassword, isUpdatingPassword, userDetails, isLoadingUser } = useUsers();
 
-  // Currently storing default values for the form 
-  // TODO: use the user's data from the database
   const {
     register: registerPersonal,
     handleSubmit: handleSubmitPersonal,
@@ -53,11 +54,23 @@ const Settings = () => {
   } = useForm<PersonalInfoFormData>({
     resolver: yupResolver(personalInfoSchema),
     defaultValues: {
-      username: user?.username || '',
-      email: user?.email || ''
+      username: userDetails?.userName || '',
+      email: userDetails?.email || '',
+      fullName: userDetails?.fullName || '',
+      phoneNumber: userDetails?.phoneNumber || ''
     }
   });
 
+  useEffect(() => {
+    if (userDetails) {
+      resetPersonal({
+        username: userDetails.userName || '',
+        email: userDetails.email || '',
+        fullName: userDetails.fullName || '',
+        phoneNumber: userDetails.phoneNumber || ''
+      });
+    }
+  }, [userDetails, resetPersonal]);
   const {
     register: registerPassword,
     handleSubmit: handleSubmitPassword,
@@ -66,20 +79,30 @@ const Settings = () => {
   } = useForm<PasswordFormData>({
     resolver: yupResolver(passwordSchema),
     defaultValues: {
-      currentPassword: '',
-      newPassword: ''
+      newPassword: '',
+      confirmPassword: ''
     }
   });
 
   const onSubmitPersonal = (data: PersonalInfoFormData) => {
-    console.log('Personal Info data:', data);
-    fireToast();
-    resetPersonal();
+    if (!user?._id) return; 
+    updateProfile({
+      _id: user._id,
+      username: data.username,
+      email: data.email,
+      fullName: data.fullName,
+      phoneNumber: data.phoneNumber,
+    });
   };
 
   const onSubmitPassword = (data: PasswordFormData) => {
-    console.log('Password reset data:', data);
-    fireToast();
+    if (!user?._id) return;
+    
+    updatePassword({
+      _id: user._id,
+      newPassword: data.newPassword,
+      confirmPassword: data.confirmPassword,
+    });
     resetPassword();
   };
 
@@ -99,8 +122,7 @@ const Settings = () => {
               </div>
               <div className="p-7">
                 <form onSubmit={handleSubmitPersonal(onSubmitPersonal)}>
-                  {/* Full Name and Phone Number are hide*/}
-                  {/* <div className="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
+                  <div className="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
                     <div className="w-full sm:w-1/2">
                       <label
                         className="mb-3 block text-sm font-medium text-black dark:text-white"
@@ -137,11 +159,15 @@ const Settings = () => {
                         <input
                           className="w-full rounded border border-stroke bg-gray py-3 pl-11.5 pr-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
                           type="text"
-                          name="fullName"
-                          id="fullName"
+                          {...registerPersonal('fullName')}
                           placeholder="Enter your full name"
                         />
                       </div>
+                      {personalErrors.fullName && (
+                        <p className="text-danger text-sm mt-1">
+                          {personalErrors.fullName.message}
+                        </p>
+                      )}
                     </div>
 
                     <div className="w-full sm:w-1/2">
@@ -154,12 +180,16 @@ const Settings = () => {
                       <input
                         className="w-full rounded border border-stroke bg-gray py-3 px-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
                         type="text"
-                        name="phoneNumber"
-                        id="phoneNumber"
+                        {...registerPersonal('phoneNumber')}
                         placeholder="Enter your phone number"
                       />
+                      {personalErrors.phoneNumber && (
+                        <p className="text-danger text-sm mt-1">
+                          {personalErrors.phoneNumber.message}
+                        </p>
+                      )}
                     </div>
-                  </div> */}
+                  </div>
 
                   <div className="mb-5.5">
                     <label
@@ -289,10 +319,11 @@ const Settings = () => {
                         Cancel
                       </button>
                       <button
-                        className="flex justify-center rounded bg-primary py-2 px-6 font-medium text-gray hover:shadow-1"
+                        className="flex justify-center rounded bg-primary py-2 px-6 font-medium text-gray hover:bg-opacity-70"
                         type="submit"
+                        disabled={isUpdatingProfile || !isPersonalFormDirty}
                       >
-                        Save Changes
+                        {isUpdatingProfile ? 'Saving...' : 'Save'}
                       </button>
                     </div>
                   )}
@@ -307,26 +338,6 @@ const Settings = () => {
               </div>
               <div className="p-7">
                 <form onSubmit={handleSubmitPassword(onSubmitPassword)}>
-                  <div className="mb-5.5">
-                    <label
-                      className="mb-3 block text-sm font-medium text-black dark:text-white"
-                      htmlFor="currentPassword"
-                    >
-                      Current Password
-                    </label>
-                    <input
-                      className="w-full rounded border border-stroke bg-gray py-3 px-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
-                      type="password"
-                      placeholder="Enter your current password"
-                      {...registerPassword('currentPassword')}
-                    />
-                    {passwordErrors.currentPassword && (
-                      <p className="text-danger text-sm mt-1">
-                        {passwordErrors.currentPassword.message}
-                      </p>
-                    )}
-                  </div>
-
                   <div className="mb-5.5">
                     <label
                       className="mb-3 block text-sm font-medium text-black dark:text-white"
@@ -347,6 +358,26 @@ const Settings = () => {
                     )}
                   </div>
 
+                  <div className="mb-5.5">
+                    <label
+                      className="mb-3 block text-sm font-medium text-black dark:text-white"
+                      htmlFor="confirmPassword"
+                    >
+                      Confirm Password
+                    </label>
+                    <input
+                      className="w-full rounded border border-stroke bg-gray py-3 px-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
+                      type="password"
+                      placeholder="Confirm your new password"
+                      {...registerPassword('confirmPassword')}
+                    />
+                    {passwordErrors.confirmPassword && (
+                      <p className="text-danger text-sm mt-1">
+                        {passwordErrors.confirmPassword.message}
+                      </p>
+                    )}
+                  </div>
+
                   {isPasswordFormDirty && (
                     <div className="flex justify-end gap-4.5">
                       <button
@@ -359,8 +390,9 @@ const Settings = () => {
                       <button
                         className="flex justify-center rounded bg-primary py-2 px-6 font-medium text-gray hover:shadow-1"
                         type="submit"
+                        disabled={isUpdatingPassword || !isPasswordFormDirty}
                       >
-                        Reset Password
+                        {isUpdatingPassword ? 'Updating...' : 'Reset Password'}
                       </button>
                     </div>
                   )}
