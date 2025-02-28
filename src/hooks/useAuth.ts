@@ -1,7 +1,7 @@
 import { useMutation } from '@tanstack/react-query';
 import { authService, RegisterData, LoginData } from '../services/auth';
 import { useNavigate } from 'react-router-dom';
-import { toast } from 'react-toastify';
+import { toast } from 'react-hot-toast';
 import { useUser } from '../contexts/UserContext';
 
 export const useAuth = () => {
@@ -12,12 +12,11 @@ export const useAuth = () => {
     mutationFn: (data: RegisterData) => authService.register(data),
     onSuccess: () => {
       console.log('Registration successful!');
-      toast.success('Registration successful! Please check your email.');
-      navigate('/auth/verification-pending');
+      toast.success('Registration successful!');
+      navigate('/auth/signin');
     },
     onError: (error: any) => {
-      console.log('error in useAuth', error);
-      if (error?.response?.data?.includes('duplicate')) {
+      if (error?.response?.data?.message?.includes('already exist')) {
         toast.error('Email already exists');
       } else {
         toast.error('Registration failed. Please try again.');

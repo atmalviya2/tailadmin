@@ -20,7 +20,7 @@ export const authService = {
       const response = await axiosInstance.post('/api/users/register', {
         email: data.email,
         password: data.password,
-        name: data.username,
+        userName: data.username,
         role: 'user',
       });
       console.log('response in service', response);

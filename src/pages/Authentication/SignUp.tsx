@@ -12,7 +12,6 @@ import * as yup from "yup";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Button } from "@/components/ui/button";
-import { toast } from "react-toastify";
 import { PasswordInput } from "@/components/ui/password-input";
 import {
   Tooltip,
@@ -20,7 +19,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tootip";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 // import { errorHandler } from "@/lib/error-handler";
 import AuthLayout from '../../layout/AuthLayout';
 import { useAuth } from '../../hooks/useAuth';
@@ -39,7 +38,6 @@ interface RegisterFormData {
 
 const SignUp = () => {
   const { register, isRegistering } = useAuth();
-  const navigate = useNavigate();
   const RegisterSchema = yup.object().shape({
     username: yup
       .string()
@@ -74,12 +72,12 @@ const SignUp = () => {
   });
 
   const onSubmit = (data: RegisterFormData) => {
-    toast.success('Registration successful! Please check your email.');
-    console.log('data', data);
-    sessionStorage.setItem('pendingVerificationEmail', data.email);
+    // set the email to the session storage for verification pending page
+    // Currently Email varification is not required
+    // sessionStorage.setItem('pendingVerificationEmail', data.email);
     register({ email: data.email, password: data.password, username: data.username });
 
-    navigate('/auth/signin');
+    // navigate('/auth/signin');
   
     // navigate('/auth/verification-pending');
   };

@@ -4,7 +4,7 @@ import { Navigate } from 'react-router-dom';
 const AdminRoute = (Component: React.ComponentType) => () => {
   const { user } = useUser();
   
-  if (!user?.isAdmin) {
+  if (user?.role !== 'admin') {
     return <Navigate to="/" replace />;
   }
 

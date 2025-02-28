@@ -8,7 +8,7 @@ interface UserContextType {
 interface UserType {
   username: string;
   email: string;
-  isAdmin: boolean;
+  role: string;
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined);

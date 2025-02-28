@@ -26,8 +26,23 @@ function App() {
     <UserProvider>
       <Toaster
         position="top-right"
-        reverseOrder={false}
-        containerClassName="overflow-auto"
+        toastOptions={{
+          duration: 4000,
+          style: {
+            background: '#333',
+            color: '#fff',
+          },
+          success: {
+            style: {
+              background: '#04b20c',
+            },
+          },
+          error: {
+            style: {
+              background: '#e13f32',
+            },
+          },
+        }}
       />
       <Routes>
         <Route path="/auth/signin" element={<SignIn />} />
