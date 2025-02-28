@@ -6,6 +6,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { personalInfoSchema, passwordSchema } from '../yupSchema';
 import { useUser } from '../contexts/UserContext';
 import { useUsers } from '../hooks/useUsers';
+import { useEffect } from 'react';
 
 
 type PersonalInfoFormData = yup.InferType<typeof personalInfoSchema>;
@@ -43,7 +44,7 @@ const Settings = () => {
   // };
 
   const { user } = useUser();
-  const { updateProfile, isUpdatingProfile, updatePassword, isUpdatingPassword } = useUsers();
+  const { updateProfile, isUpdatingProfile, updatePassword, isUpdatingPassword, userDetails, isLoadingUser } = useUsers();
 
   const {
     register: registerPersonal,
@@ -53,13 +54,23 @@ const Settings = () => {
   } = useForm<PersonalInfoFormData>({
     resolver: yupResolver(personalInfoSchema),
     defaultValues: {
-      username: user?.userName || '',
-      email: user?.email || '',
-      fullName: user?.fullName || '',
-      phoneNumber: user?.phoneNumber || ''
+      username: userDetails?.userName || '',
+      email: userDetails?.email || '',
+      fullName: userDetails?.fullName || '',
+      phoneNumber: userDetails?.phoneNumber || ''
     }
   });
 
+  useEffect(() => {
+    if (userDetails) {
+      resetPersonal({
+        username: userDetails.userName || '',
+        email: userDetails.email || '',
+        fullName: userDetails.fullName || '',
+        phoneNumber: userDetails.phoneNumber || ''
+      });
+    }
+  }, [userDetails, resetPersonal]);
   const {
     register: registerPassword,
     handleSubmit: handleSubmitPassword,

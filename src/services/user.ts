@@ -51,4 +51,9 @@ export const userService = {
     });
     return response.data;
   },
+
+  getUserById: async (userId: string) => {
+    const response = await axiosInstance.get(`/api/users/${userId}`);
+    return response.data;
+  },
 }; 

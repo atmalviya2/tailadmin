@@ -1,14 +1,35 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { userService } from '../services/user';
 import { toast } from 'react-hot-toast';
+import { useUser } from '../contexts/UserContext';
+import { useEffect } from 'react';
 
 export const useUsers = () => {
   const queryClient = useQueryClient();
+  const { user, setUser } = useUser();
 
   const { data: users, isLoading } = useQuery({
     queryKey: ['users'],
     queryFn: userService.getAllUsers,
   });
+
+  const getUserById = useMutation({
+    mutationFn: userService.getUserById,
+    onSuccess: (data) => {
+      setUser(data);
+    },
+    onError: (error: any) => {
+      const message = error?.response?.data?.message || 'Failed to get user';
+      toast.error(message);
+    },
+  });
+
+  // Fetch user details when component mounts
+  useEffect(() => {
+    if (user?._id) {
+      getUserById.mutate(user._id);
+    }
+  }, [user?._id]);
 
   const deleteUserMutation = useMutation({
     mutationFn: userService.deleteUser,
@@ -82,5 +103,9 @@ export const useUsers = () => {
     isUpdatingProfile: updateProfileMutation.isPending,
     updatePassword: updatePasswordMutation.mutate,
     isUpdatingPassword: updatePasswordMutation.isPending,
+    userDetails: getUserById.data,
+    isLoadingUser: getUserById.isPending,
+    getUserById: getUserById.mutate,
+    isGettingUser: getUserById.isPending,
   };
 }; 
