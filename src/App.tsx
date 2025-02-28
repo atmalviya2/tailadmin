@@ -8,6 +8,8 @@ import SignIn from './pages/Authentication/SignIn';
 import SignUp from './pages/Authentication/SignUp';
 import Loader from './common/Loader';
 import routes from './routes';
+import VerificationPending from './pages/Authentication/VerificationPending';
+import VerifyEmail from './pages/Authentication/VerifyEmail';
 
 const DefaultLayout = lazy(() => import('./layout/DefaultLayout'));
 
@@ -30,6 +32,8 @@ function App() {
       <Routes>
         <Route path="/auth/signin" element={<SignIn />} />
         <Route path="/auth/signup" element={<SignUp />} />
+        <Route path="/auth/verification-pending" element={<VerificationPending />} />
+        <Route path="/auth/verify-email/:token" element={<VerifyEmail />} />
         <Route element={<DefaultLayout />}>
           <Route index element={<ECommerce />} />
           {routes.map((routes, index) => {
