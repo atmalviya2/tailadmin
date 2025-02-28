@@ -25,19 +25,30 @@ export const userService = {
   },
 
   updateUserProfile: async (data: {
+    _id: string;
     username?: string;
+    email?: string;
     fullName?: string;
     phoneNumber?: string;
   }) => {
-    const response = await axiosInstance.put(`/api/users/${data._id}`, data);
+    const response = await axiosInstance.put(`/api/users/${data._id}`, {
+      userName: data.username,
+      email: data.email,
+      fullName: data.fullName,
+      phoneNumber: data.phoneNumber
+    });
     return response.data;
   },
 
   updatePassword: async (data: {
-    currentPassword: string;
+    _id: string;
     newPassword: string;
+    confirmPassword: string;
   }) => {
-    const response = await axiosInstance.put('/api/users/password', data);
+    const response = await axiosInstance.put(`/api/users/resetPasswordByUser${data._id}`, {
+      newPassword: data.newPassword,
+      confirmPassword: data.confirmPassword,
+    });
     return response.data;
   },
 }; 

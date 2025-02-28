@@ -3,6 +3,7 @@ import { authService, RegisterData, LoginData } from '../services/auth';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import { useUser } from '../contexts/UserContext';
+import Cookies from 'js-cookie';
 
 export const useAuth = () => {
   const navigate = useNavigate();
@@ -57,12 +58,13 @@ export const useAuth = () => {
         phoneNumber: response.user.phoneNumber || null
       };
       setUser(user);
+      Cookies.set('token', response.token);
       toast.success('Logged in successfully!');
       navigate('/');
     },
     onError: (error: any) => {
-      const errorMessage = error?.response?.data?.message || 'Login failed';
-      toast.error(errorMessage);
+      const message = error?.response?.data?.message || 'Login failed';
+      toast.error(message);
     },
   });
 
