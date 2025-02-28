@@ -21,4 +21,12 @@ export const personalInfoSchema = yup.object({
   email: yup.string()
     .required('Email is required')
     .email('Please enter a valid email address'),
+  fullName: yup.string()
+    .required('Full name is required')
+    .min(3, 'Full name must be at least 3 characters')
+    .max(50, 'Full name must not exceed 50 characters'),
+  phoneNumber: yup.string()
+    .required('Phone number is required')
+    .matches(/^[0-9+\-\s()]*$/, 'Invalid phone number format')
+    .min(10, 'Phone number must be at least 10 characters')
 });

@@ -43,8 +43,6 @@ const Settings = () => {
 
   const { user } = useUser();
 
-  // Currently storing default values for the form 
-  // TODO: use the user's data from the database
   const {
     register: registerPersonal,
     handleSubmit: handleSubmitPersonal,
@@ -53,8 +51,10 @@ const Settings = () => {
   } = useForm<PersonalInfoFormData>({
     resolver: yupResolver(personalInfoSchema),
     defaultValues: {
-      username: user?.username || '',
-      email: user?.email || ''
+      username: user?.userName || '',
+      email: user?.email || '',
+      fullName: user?.fullName || '',
+      phoneNumber: user?.phoneNumber || ''
     }
   });
 
@@ -99,7 +99,6 @@ const Settings = () => {
               </div>
               <div className="p-7">
                 <form onSubmit={handleSubmitPersonal(onSubmitPersonal)}>
-                  {/* Full Name and Phone Number are hide*/}
                   <div className="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
                     <div className="w-full sm:w-1/2">
                       <label
@@ -137,11 +136,15 @@ const Settings = () => {
                         <input
                           className="w-full rounded border border-stroke bg-gray py-3 pl-11.5 pr-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
                           type="text"
-                          name="fullName"
-                          id="fullName"
+                          {...registerPersonal('fullName')}
                           placeholder="Enter your full name"
                         />
                       </div>
+                      {personalErrors.fullName && (
+                        <p className="text-danger text-sm mt-1">
+                          {personalErrors.fullName.message}
+                        </p>
+                      )}
                     </div>
 
                     <div className="w-full sm:w-1/2">
@@ -154,10 +157,14 @@ const Settings = () => {
                       <input
                         className="w-full rounded border border-stroke bg-gray py-3 px-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
                         type="text"
-                        name="phoneNumber"
-                        id="phoneNumber"
+                        {...registerPersonal('phoneNumber')}
                         placeholder="Enter your phone number"
                       />
+                      {personalErrors.phoneNumber && (
+                        <p className="text-danger text-sm mt-1">
+                          {personalErrors.phoneNumber.message}
+                        </p>
+                      )}
                     </div>
                   </div>
 

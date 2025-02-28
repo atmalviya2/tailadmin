@@ -6,9 +6,11 @@ interface UserContextType {
 }
 
 interface UserType {
-  username: string;
+  userName: string;
   email: string;
   role: string;
+  fullName: string | null;
+  phoneNumber: string | null;
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined);

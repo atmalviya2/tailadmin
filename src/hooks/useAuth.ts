@@ -51,7 +51,12 @@ export const useAuth = () => {
   const loginMutation = useMutation({
     mutationFn: (data: LoginData) => authService.login(data),
     onSuccess: (response) => {
-      setUser(response.user);
+      const user = {
+        ...response.user,
+        fullName: response.user.fullName || null,
+        phoneNumber: response.user.phoneNumber || null
+      };
+      setUser(user);
       toast.success('Logged in successfully!');
       navigate('/');
     },
