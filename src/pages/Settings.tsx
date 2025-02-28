@@ -100,7 +100,7 @@ const Settings = () => {
               <div className="p-7">
                 <form onSubmit={handleSubmitPersonal(onSubmitPersonal)}>
                   {/* Full Name and Phone Number are hide*/}
-                  {/* <div className="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
+                  <div className="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
                     <div className="w-full sm:w-1/2">
                       <label
                         className="mb-3 block text-sm font-medium text-black dark:text-white"
@@ -159,7 +159,7 @@ const Settings = () => {
                         placeholder="Enter your phone number"
                       />
                     </div>
-                  </div> */}
+                  </div>
 
                   <div className="mb-5.5">
                     <label
