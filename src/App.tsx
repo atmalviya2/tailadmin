@@ -2,6 +2,8 @@ import { Suspense, lazy, useEffect, useState } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import { UserProvider } from './contexts/UserContext';
+import PrivateRoute from './components/PrivateRoute';
+import PublicRoute from './components/PublicRoute';
 
 import ECommerce from './pages/Dashboard/ECommerce';
 import SignIn from './pages/Authentication/SignIn';
@@ -45,14 +47,34 @@ function App() {
         }}
       />
       <Routes>
-        <Route path="/auth/signin" element={<SignIn />} />
-        <Route path="/auth/signup" element={<SignUp />} />
+        <Route
+          path="/auth/signin"
+          element={
+            <PublicRoute>
+              <SignIn />
+            </PublicRoute>
+          }
+        />
+        <Route
+          path="/auth/signup"
+          element={
+            <PublicRoute>
+              <SignUp />
+            </PublicRoute>
+          }
+        />
         <Route path="/auth/verification-pending" element={<VerificationPending />} />
         <Route path="/auth/verify-email/:token" element={<VerifyEmail />} />
-        <Route element={<DefaultLayout />}>
+        <Route
+          element={
+            <PrivateRoute>
+              <DefaultLayout />
+            </PrivateRoute>
+          }
+        >
           <Route index element={<ECommerce />} />
-          {routes.map((routes, index) => {
-            const { path, component: Component } = routes;
+          {routes.map((route, index) => {
+            const { path, component: Component } = route;
             return (
               <Route
                 key={index}
