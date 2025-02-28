@@ -68,6 +68,12 @@ export const useAuth = () => {
     },
   });
 
+  const logout = () => {
+    setUser(null);
+    Cookies.remove('token');
+    navigate('/auth/signin');
+  };
+
   return {
     register: registerMutation.mutate,
     isRegistering: registerMutation.isPending,
@@ -77,5 +83,6 @@ export const useAuth = () => {
     isResending: resendVerificationMutation.isPending,
     login: loginMutation.mutate,
     isLoggingIn: loginMutation.isPending,
+    logout,
   };
 }; 
