@@ -5,7 +5,7 @@ import Cookies from 'js-cookie';
 export interface RegisterData {
   email: string;
   password: string;
-  username: string;
+  userName: string;
 }
 
 export interface LoginData {
@@ -20,7 +20,7 @@ export const authService = {
       const response = await axiosInstance.post('/api/users/register', {
         email: data.email,
         password: data.password,
-        userName: data.username,
+        userName: data.userName,
         role: 'user',
       });
       console.log('response in service', response);

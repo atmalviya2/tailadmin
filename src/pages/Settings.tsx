@@ -1,5 +1,4 @@
 import Breadcrumb from '../components/Breadcrumb';
-import fireToast from '../hooks/fireToast';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -13,38 +12,9 @@ type PersonalInfoFormData = yup.InferType<typeof personalInfoSchema>;
 type PasswordFormData = yup.InferType<typeof passwordSchema>;
 
 const Settings = () => {
-  // const [modalOpen, setModalOpen] = useState(false);
-  // const [rows, setRows] = useState(localStorage.getItem("alertSettings") ? JSON.parse(localStorage.getItem("alertSettings")) : []);
-  // useEffect(() => {
-  //   // storing input name
-  //   localStorage.setItem("alertSettings", JSON.stringify(rows));
-  // }, [rows]);
-  // const [rowToEdit, setRowToEdit] = useState(null);
-
-  // const handleDeleteRow = (targetIndex) => {
-  //   setRows(rows.filter((_, idx) => idx !== targetIndex));
-  // };
-
-  // const handleEditRow = (idx) => {
-  //   setRowToEdit(idx);
-
-  //   setModalOpen(true);
-  // };
-
-  // const handleSubmit = (newRow) => {
-  //   rowToEdit === null
-  //     ? setRows([...rows, newRow])
-  //     : setRows(
-  //       rows.map((currRow, idx) => {
-  //         if (idx !== rowToEdit) return currRow;
-
-  //         return newRow;
-  //       })
-  //     );
-  // };
 
   const { user } = useUser();
-  const { updateProfile, isUpdatingProfile, updatePassword, isUpdatingPassword, userDetails, isLoadingUser } = useUsers();
+  const { updateProfile, isUpdatingProfile, updatePassword, isUpdatingPassword, userDetails } = useUsers();
 
   const {
     register: registerPersonal,
@@ -54,7 +24,7 @@ const Settings = () => {
   } = useForm<PersonalInfoFormData>({
     resolver: yupResolver(personalInfoSchema),
     defaultValues: {
-      username: userDetails?.userName || '',
+      userName: userDetails?.userName || '',
       email: userDetails?.email || '',
       fullName: userDetails?.fullName || '',
       phoneNumber: userDetails?.phoneNumber || ''
@@ -64,7 +34,7 @@ const Settings = () => {
   useEffect(() => {
     if (userDetails) {
       resetPersonal({
-        username: userDetails.userName || '',
+        userName: userDetails.userName || '',
         email: userDetails.email || '',
         fullName: userDetails.fullName || '',
         phoneNumber: userDetails.phoneNumber || ''
@@ -85,10 +55,10 @@ const Settings = () => {
   });
 
   const onSubmitPersonal = (data: PersonalInfoFormData) => {
-    if (!user?._id) return; 
+    if (!user?._id) return;
     updateProfile({
       _id: user._id,
-      username: data.username,
+      userName: data.userName,
       email: data.email,
       fullName: data.fullName,
       phoneNumber: data.phoneNumber,
@@ -97,7 +67,7 @@ const Settings = () => {
 
   const onSubmitPassword = (data: PasswordFormData) => {
     if (!user?._id) return;
-    
+
     updatePassword({
       _id: user._id,
       newPassword: data.newPassword,
@@ -194,19 +164,19 @@ const Settings = () => {
                   <div className="mb-5.5">
                     <label
                       className="mb-3 block text-sm font-medium text-black dark:text-white"
-                      htmlFor="username"
+                      htmlFor="userName"
                     >
                       Username
                     </label>
                     <input
                       className="w-full rounded border border-stroke bg-gray py-3 px-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
                       type="text"
-                      {...registerPersonal('username')}
-                      placeholder="Enter your username"
+                      {...registerPersonal('userName')}
+                      placeholder="Enter your userName"
                     />
-                    {personalErrors.username && (
+                    {personalErrors.userName && (
                       <p className="text-danger text-sm mt-1">
-                        {personalErrors.username.message}
+                        {personalErrors.userName.message}
                       </p>
                     )}
                   </div>

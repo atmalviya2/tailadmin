@@ -18,7 +18,7 @@ export const userService = {
   },
 
   updateUserStatus: async (userId: string, isApproved: boolean) => {
-    const response = await axiosInstance.put(`/api/users/toggleUserVerification${userId}`, {
+    const response = await axiosInstance.put(`/api/users/toggleUserVerification/${userId}`, {
       isApproved
     });
     return response.data;
@@ -26,13 +26,14 @@ export const userService = {
 
   updateUserProfile: async (data: {
     _id: string;
-    username?: string;
+    userName?: string;
     email?: string;
     fullName?: string;
     phoneNumber?: string;
+    id: string;
   }) => {
     const response = await axiosInstance.put(`/api/users/${data._id}`, {
-      userName: data.username,
+      userName: data.userName,
       email: data.email,
       fullName: data.fullName,
       phoneNumber: data.phoneNumber

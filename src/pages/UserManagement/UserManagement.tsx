@@ -20,7 +20,7 @@ import { useState } from 'react';
 import { useUsers } from '@/hooks/useUsers';
 import { Loader2 } from 'lucide-react';
 import { Switch } from '@/components/ui/switch1';
-import { UserData } from '@/types/users'; 
+import { UserData } from '@/types/users';
 
 const UserManagement = () => {
   const { users, isLoading, deleteUser, resetPassword, updateUserStatus, isUpdatingStatus } = useUsers();
@@ -78,7 +78,8 @@ const UserManagement = () => {
             <TableHead>Email</TableHead>
             <TableHead>User Name</TableHead>
             <TableHead>Status</TableHead>
-            <TableHead>Actions</TableHead>
+            <TableHead>Reset Password</TableHead>
+            <TableHead>Delete User</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -97,12 +98,16 @@ const UserManagement = () => {
               <TableCell className="space-x-2">
                 <Button
                   variant="outline"
+                  className="bg-primary dark:bg-secondary text-white dark:text-black"
                   onClick={() => handleResetPassword(user)}
                 >
                   Reset Password
                 </Button>
+              </TableCell>
+              <TableCell>
                 <Button
-                  variant="destructive"
+                  variant="outline"
+                  className='bg-danger dark:bg-warning text-white dark:text-black'
                   onClick={() => handleDeleteUser(user)}
                 >
                   Delete
@@ -126,7 +131,7 @@ const UserManagement = () => {
             <Button variant="outline" onClick={() => setIsDeleteDialogOpen(false)}>
               Cancel
             </Button>
-            <Button variant="destructive" onClick={confirmDelete}>
+            <Button variant="outline" className='bg-danger dark:bg-warning text-white dark:text-black' onClick={confirmDelete}>
               Delete
             </Button>
           </DialogFooter>
@@ -146,7 +151,7 @@ const UserManagement = () => {
             <Button variant="outline" onClick={() => setIsResetPasswordDialogOpen(false)}>
               Cancel
             </Button>
-            <Button onClick={confirmResetPassword} variant="default">
+            <Button onClick={confirmResetPassword} variant="default" className='bg-primary dark:bg-secondary text-white dark:text-black'>
               Reset Password
             </Button>
           </DialogFooter>
