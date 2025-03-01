@@ -46,8 +46,7 @@ export const userService = {
     confirmPassword: string;
   }) => {
     const response = await axiosInstance.put(`/api/users/resetPasswordByUser${data._id}`, {
-      newPassword: data.newPassword,
-      confirmPassword: data.confirmPassword,
+      password: data.newPassword,
     });
     return response.data;
   },

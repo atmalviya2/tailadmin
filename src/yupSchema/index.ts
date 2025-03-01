@@ -21,4 +21,5 @@ export const personalInfoSchema = yup.object({
     .email('Please enter a valid email address'),
   fullName: yup.string(),
   phoneNumber: yup.string()
+  .matches(/^[0-9+\-\s()]*$/, 'Invalid phone number format')
 });
