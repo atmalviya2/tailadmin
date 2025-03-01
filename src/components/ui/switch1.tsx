@@ -15,12 +15,12 @@ export const Switch = ({ checked, disabled, onCheckedChange }: SwitchProps) => {
         className="sr-only peer"
       />
       <div className={`
-        w-11 h-6 bg-gray-200 
+        w-11 h-6 bg-primary
         peer-focus:outline-none peer-focus:ring-4 
         peer-focus:ring-blue-300 
         dark:peer-focus:ring-blue-800 
         rounded-full peer 
-        dark:bg-gray-700 
+        dark:bg-secondary
         peer-checked:after:translate-x-full 
         peer-checked:after:border-white 
         after:content-[''] 

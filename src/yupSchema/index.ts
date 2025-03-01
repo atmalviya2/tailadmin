@@ -12,7 +12,7 @@ export const passwordSchema = yup.object().shape({
 });
 
 export const personalInfoSchema = yup.object({
-  username: yup.string()
+  userName: yup.string()
     .required('Username is required')
     .min(3, 'Username must be at least 3 characters')
     .max(20, 'Username must not exceed 20 characters'),
