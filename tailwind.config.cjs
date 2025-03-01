@@ -44,6 +44,21 @@ module.exports = {
       success: '#219653',
       danger: '#e72a2a',
       warning: '#ce5e5e',
+      destructive: {
+        DEFAULT: "#ef4444",
+        foreground: "#fafafa",
+        dark: "#ce5e5e"
+      },
+      // primary: {
+      //   DEFAULT: "#3b82f6",
+      //   foreground: "#ffffff",
+      //   dark: "#1ddfc5"
+      // },
+      // secondary: {
+      //   DEFAULT: "#4b5563",
+      //   foreground: "#ffffff",
+      //   dark: "#1A222C"
+      // },
     },
     screens: {
       '2xsm': '375px',

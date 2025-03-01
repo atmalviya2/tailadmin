@@ -97,8 +97,6 @@ const UserManagement = () => {
               </TableCell>
               <TableCell className="space-x-2">
                 <Button
-                  variant="outline"
-                  className="bg-primary dark:bg-secondary text-white dark:text-black"
                   onClick={() => handleResetPassword(user)}
                 >
                   Reset Password
@@ -106,8 +104,7 @@ const UserManagement = () => {
               </TableCell>
               <TableCell>
                 <Button
-                  variant="outline"
-                  className='bg-danger dark:bg-warning text-white dark:text-black'
+                  variant="destructive"
                   onClick={() => handleDeleteUser(user)}
                 >
                   Delete
@@ -131,7 +128,7 @@ const UserManagement = () => {
             <Button variant="outline" onClick={() => setIsDeleteDialogOpen(false)}>
               Cancel
             </Button>
-            <Button variant="outline" className='bg-danger dark:bg-warning text-white dark:text-black' onClick={confirmDelete}>
+            <Button variant="destructive" onClick={confirmDelete}>
               Delete
             </Button>
           </DialogFooter>
@@ -151,7 +148,7 @@ const UserManagement = () => {
             <Button variant="outline" onClick={() => setIsResetPasswordDialogOpen(false)}>
               Cancel
             </Button>
-            <Button onClick={confirmResetPassword} variant="default" className='bg-primary dark:bg-secondary text-white dark:text-black'>
+            <Button onClick={confirmResetPassword}>
               Reset Password
             </Button>
           </DialogFooter>
