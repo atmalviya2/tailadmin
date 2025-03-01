@@ -23,7 +23,7 @@ import { Switch } from '@/components/ui/switch1';
 import { UserData } from '@/types/users';
 
 const UserManagement = () => {
-  const { users, isLoading, deleteUser, resetPassword, updateUserStatus, isUpdatingStatus } = useUsers();
+  const { users, isLoading, deleteUser, resetPassword, updateUserStatus, isUpdatingStatus } = useUsers(true);
   const [selectedUser, setSelectedUser] = useState<UserData | null>(null);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [isResetPasswordDialogOpen, setIsResetPasswordDialogOpen] = useState(false);

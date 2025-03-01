@@ -4,13 +4,14 @@ import { toast } from 'react-hot-toast';
 import { useUser } from '../contexts/UserContext';
 import { useEffect } from 'react';
 
-export const useUsers = () => {
+export const useUsers = (enabled = true) => {
   const queryClient = useQueryClient();
   const { user, setUser } = useUser();
 
   const { data: users, isLoading } = useQuery({
     queryKey: ['users'],
     queryFn: userService.getAllUsers,
+    enabled: enabled && user?.role === 'admin',
   });
 
   const getUserById = useMutation({
