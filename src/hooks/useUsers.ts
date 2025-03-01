@@ -33,8 +33,8 @@ export const useUsers = () => {
 
   const deleteUserMutation = useMutation({
     mutationFn: userService.deleteUser,
-    onSuccess: () => {
-      toast.success('User deleted successfully');
+    onSuccess: (data) => {
+      toast.success(data.message);
       queryClient.invalidateQueries({ queryKey: ['users'] });
     },
     onError: (error: any) => {
@@ -45,8 +45,8 @@ export const useUsers = () => {
 
   const resetPasswordMutation = useMutation({
     mutationFn: userService.resetUserPassword,
-    onSuccess: () => {
-      toast.success('Password reset email sent');
+    onSuccess: (data) => {
+      toast.success(data.message);
     },
     onError: (error: any) => {
       const message = error?.response?.data?.message || 'Failed to reset password';
@@ -57,8 +57,8 @@ export const useUsers = () => {
   const updateUserStatusMutation = useMutation({
     mutationFn: ({ userId, isApproved }: { userId: string; isApproved: boolean }) =>
       userService.updateUserStatus(userId, isApproved),
-    onSuccess: () => {
-      toast.success('User status updated successfully');
+    onSuccess: (data) => {
+      toast.success(data.message);
       queryClient.invalidateQueries({ queryKey: ['users'] });
     },
     onError: (error: any) => {
@@ -69,8 +69,8 @@ export const useUsers = () => {
 
   const updateProfileMutation = useMutation({
     mutationFn: userService.updateUserProfile,
-    onSuccess: () => {
-      toast.success('Profile updated successfully');
+    onSuccess: (data) => {
+      toast.success(data.message);
       queryClient.invalidateQueries({ queryKey: ['users'] });
     },
     onError: (error: any) => {
@@ -81,8 +81,8 @@ export const useUsers = () => {
 
   const updatePasswordMutation = useMutation({
     mutationFn: userService.updatePassword,
-    onSuccess: () => {
-      toast.success('Password updated successfully');
+    onSuccess: (data) => {
+      toast.success(data.message);
     },
     onError: (error: any) => {
       const message = error?.response?.data?.message || 'Failed to update password';
