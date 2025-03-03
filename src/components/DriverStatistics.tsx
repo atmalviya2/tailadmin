@@ -44,7 +44,7 @@ export const DriverStatistics: React.FC<DriverStatisticsProps> = ({ driverData }
   };
   return (
     <Table>
-      <TableCaption>A list of your recent invoices.</TableCaption>
+      <TableCaption>A list of your drivers.</TableCaption>
       <TableHeader>
         <TableRow>
           <TableHead className="w-[50px]">Rank</TableHead>
