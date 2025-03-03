@@ -9,15 +9,15 @@ const CompletionGauges: React.FC<CompletionGaugeProps> = ({ orderData }) => {
   const guageData = [
     {
       title: "Cancelled Order",
-      percentage: orderData?.cancelledPercentage
+      percentage: orderData?.cancelledPercentage || 0
     },
     {
       title: "Completed On Time",
-      percentage: orderData?.completedOnTimePercentage
+      percentage: orderData?.completedOnTimePercentage || 0
     },
     {
       title: "Picked On Time",
-      percentage: orderData?.pickedUpOnTimePercentage
+      percentage: orderData?.pickedUpOnTimePercentage || 0
     }
   ]
 

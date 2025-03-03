@@ -76,7 +76,9 @@ const UserManagement = () => {
           <TableRow>
             <TableHead className="w-[50px]">No</TableHead>
             <TableHead>Email</TableHead>
+            <TableHead>Full Name</TableHead>
             <TableHead>User Name</TableHead>
+            <TableHead>Phone Number</TableHead>
             <TableHead>Status</TableHead>
             <TableHead>Reset Password</TableHead>
             <TableHead>Delete User</TableHead>
@@ -87,7 +89,9 @@ const UserManagement = () => {
             <TableRow key={user._id}>
               <TableCell className="font-medium">{index + 1}</TableCell>
               <TableCell>{user.email}</TableCell>
+              <TableCell>{user.fullName || '-'}</TableCell>
               <TableCell>{user.userName || '-'}</TableCell>
+              <TableCell>{user.phoneNumber || '-'}</TableCell>
               <TableCell>
                 <Switch
                   checked={user._verified}

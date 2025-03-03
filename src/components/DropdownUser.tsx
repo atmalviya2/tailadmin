@@ -2,8 +2,8 @@ import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { useUser } from '../contexts/UserContext';
-
-import UserOne from '../images/user/user-01.png';
+import { CircleUserRound } from 'lucide-react';
+// import UserOne from '../images/user/user-01.png';
 
 const DropdownUser = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -49,20 +49,22 @@ const DropdownUser = () => {
       <Link
         ref={trigger}
         onClick={() => setDropdownOpen(!dropdownOpen)}
-        className="flex items-center gap-4"
+        className="flex items-center gap-2"
         to="#"
       >
         <span className="hidden text-right lg:block">
           <span className="block text-sm font-medium text-black dark:text-white">
             {user?.fullName || user?.userName}
           </span>
-          <span className="block text-xs">UX Designer</span>
         </span>
 
-        <span className="h-12 w-12 rounded-full">
-          <img src={UserOne} alt="User" />
-        </span>
-
+          <CircleUserRound className="w-10 h-10" />
+        {/* <div className="flex items-center justify-center w-10 h-10 rounded-full bg-primary dark:bg-primary-dark text-white">
+          {user?.fullName 
+            ? user.fullName.charAt(0).toUpperCase()
+            : user?.userName?.charAt(0).toUpperCase() || 'U'
+          }
+        </div> */}
         <svg
           className={`hidden fill-current sm:block ${dropdownOpen ? 'rotate-180' : ''
             }`}
