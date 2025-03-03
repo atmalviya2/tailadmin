@@ -16,8 +16,16 @@ import {
 interface DatePickerDemoProps {
   date: Date;
   onChange: (date: Date) => void;
+  minDate?: Date;
+  maxDate?: Date;
 }
-export const DatePickerDemo: React.FC<DatePickerDemoProps> = ({ date, onChange }) => {
+
+export const DatePickerDemo: React.FC<DatePickerDemoProps> = ({ 
+  date, 
+  onChange,
+  minDate,
+  maxDate 
+}) => {
   return (
     <Popover>
       <PopoverTrigger asChild>
@@ -38,10 +46,11 @@ export const DatePickerDemo: React.FC<DatePickerDemoProps> = ({ date, onChange }
           selected={date}
           onDayClick={(day) => onChange(day)}
           initialFocus
+          fromDate={minDate}
+          toDate={maxDate}
           style={{
             background: "white"
           }}
-
         />
       </PopoverContent>
     </Popover>
