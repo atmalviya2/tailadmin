@@ -30,7 +30,6 @@ export const userService = {
     email?: string;
     fullName?: string;
     phoneNumber?: string;
-    id: string;
   }) => {
     const response = await axiosInstance.put(`/api/users/${data._id}`, {
       userName: data.userName,
