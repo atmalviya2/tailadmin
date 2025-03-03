@@ -9,22 +9,22 @@ const IncomeCards: React.FC<IncomeCardsProps> = ({ paymentData }) => {
   const cardData = [
     {
       title: "Total Delivery Fee",
-      value: paymentData?.total_delivery_fee?.toFixed(2) || "0.00",
+      value: (paymentData?.total_delivery_fee ?? 0).toFixed(2),
       color: "#50C878",
     },
     {
       title: "Total Driver Pay",
-      value: paymentData?.total_driver_pay?.toFixed(2) || "0.00",
+      value: (paymentData?.total_driver_pay ?? 0).toFixed(2),
       color: "#4169E1",
     },
     {
       title: "Total Tip",
-      value: paymentData?.total_tip?.toFixed(2) || "0.00",
+      value: (paymentData?.total_tip ?? 0).toFixed(2),
       color: "#E7CBA7",
     },
     {
       title: "Total Income",
-      value: paymentData?.total_income?.toFixed(2) || "0.00",
+      value: (paymentData?.total_income ?? 0).toFixed(2),
       color: "#8E4585",
     },
   ];

@@ -12,15 +12,24 @@ const PieChart: React.FC<PieChartProps> = ({ zipcodeData }) => {
   const top10ByCount = sortedByCount.slice(0, 10);
   const bottom10ByCount = sortedByCount.slice(-10);
 
-  const zipcodeLabels = [...top10ByCount.map((zipcode) => zipcode.zipcode), ...bottom10ByCount.map((zipcode) => zipcode.zipcode)]
+  const zipcodeLabels = zipcodeData.length > 0 
+    ? [...top10ByCount.map((zipcode) => zipcode.zipcode), ...bottom10ByCount.map((zipcode) => zipcode.zipcode)]
+    : ['No Data'];
+
+  const zipcodeSeries = zipcodeData.length > 0
+    ? [...top10ByCount.map((zipcode) => zipcode.count), ...bottom10ByCount.map((zipcode) => zipcode.count)]
+    : [100]; 
+
   const options: ApexOptions = {
     chart: {
       type: 'donut',
     },
-    colors: ['#10B981', '#375E83', '#259AE6', '#FFA70B'],
+    colors: zipcodeData.length > 0 
+      ? ['#10B981', '#375E83', '#259AE6', '#FFA70B']
+      : ['#E5E7EB'], 
     labels: zipcodeLabels,
     legend: {
-      show: true,
+      show: zipcodeData.length > 0,
       position: 'right',
       onItemClick: {
         toggleDataSeries: true
@@ -31,6 +40,25 @@ const PieChart: React.FC<PieChartProps> = ({ zipcodeData }) => {
         donut: {
           size: '65%',
           background: 'transparent',
+          labels: {
+            show: true,
+            name: {
+              show: true,
+            },
+            value: {
+              show: zipcodeData.length > 0,
+              formatter: function(val) {
+                return zipcodeData.length > 0 ? val.toString() : 'No Data';
+              }
+            },
+            total: {
+              show: zipcodeData.length === 0,
+              label: 'No Data Available',
+              formatter: function() {
+                return '';
+              }
+            }
+          }
         },
       },
     },
@@ -54,17 +82,12 @@ const PieChart: React.FC<PieChartProps> = ({ zipcodeData }) => {
             innerHeight: 400
           },
           legend: {
-            show: false, // Hide legend on smaller screens
+            show: false,
           },
         },
       },
     ],
   };
-  const zipcodeSeries = [...top10ByCount.map((zipcode) => zipcode.count), ...bottom10ByCount.map((zipcode) => zipcode.count)]
-
-  // const [state, setState] = useState<PieChartState>({
-  //   series: zipcodeSeries,
-  // });
 
   return (
     <div className="rounded-xl col-span-12 border border-stroke bg-white px-5 pt-7.5 pb-5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:col-span-6">
