@@ -67,6 +67,16 @@ const options: ApexOptions = {
   fill: {
     opacity: 1,
   },
+  noData: {
+    text: 'No data available',
+    align: 'center',
+    verticalAlign: 'middle',
+    style: {
+      fontSize: '16px',
+      fontFamily: 'Satoshi, sans-serif',
+      color: '#888888'
+    }
+  }
 };
 
 interface BarChartProps {
@@ -77,13 +87,13 @@ const OrderCountChart: React.FC<BarChartProps> = ({ orderData }) => {
     series: [
       {
         name: 'Orders',
-        data: [
-          orderData?.totalFinishedOrders,
-          orderData?.cancelledOrders,
-          orderData?.completedOrders,
-          orderData?.completedOnTimeOrders,
-          orderData?.pickedUpOnTimeOrders
-        ],
+        data: orderData ? [
+          orderData.totalFinishedOrders ?? 0,
+          orderData.cancelledOrders ?? 0,
+          orderData.completedOrders ?? 0,
+          orderData.completedOnTimeOrders ?? 0,
+          orderData.pickedUpOnTimeOrders ?? 0
+        ] : [0, 0, 0, 0, 0]
       }
     ],
   };
@@ -101,7 +111,7 @@ const OrderCountChart: React.FC<BarChartProps> = ({ orderData }) => {
         <div id="chartTwo" className="-ml-5 -mb-9">
           <ReactApexChart
             options={options}
-            series={data.series as any}
+            series={data.series}
             type="bar"
             height={350}
           />
