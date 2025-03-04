@@ -8,45 +8,30 @@ export const axiosInstance = axios.create({
 });
 axiosInstance.interceptors.request.use((config) => {
   const token = Cookies.get("token");
-  // console.log("baseurl", baseURL)
   if (token) {
     config.headers.Authorization = "Bearer " + token;
   }
-
   return config;
 });
 
 axiosInstance.interceptors.response.use(
-  (value) => {
-    return value;
-  },
+  (response) => response,
   (error) => {
-    if (error.response) {
-      const status = error.response.status;
+    if (error.response?.status === 401 || error.response?.status === 403) {
+      // Clear auth data
+      Cookies.remove("token");
+      localStorage.removeItem("user");
+      
+      // Get current location
       const currentPath = window.location.pathname;
-      console.log("current path", currentPath)
-      const publicPaths = [
-        '/auth/signin',
-        '/auth/signup',
-        '/auth/verification-pending',
-        '/auth/verify-email',
-      ];
-
-      const isPublicPath = publicPaths.some(path =>
-        currentPath === path || currentPath.startsWith(path + '/' || path + '?')
-      );
-
-      if (status === 401 || status === 403) {
-        if (!isPublicPath) {
-          Cookies.remove("token");
-          localStorage.removeItem("user");
-
-          // Redirect instead of reload to prevent loops
-          const returnTo = encodeURIComponent(currentPath);
-          window.location.href = `/auth/signin?returnTo=${returnTo}`;
-        }
+      const isAuthPath = ['/auth/signin', '/auth/signup'].includes(currentPath);
+      
+      if (!isAuthPath) {
+        // Redirect to login with return URL
+        const returnTo = encodeURIComponent(currentPath);
+        window.location.href = `/auth/signin?returnTo=${returnTo}`;
       }
     }
-    throw error;
-  },
+    return Promise.reject(error);
+  }
 );

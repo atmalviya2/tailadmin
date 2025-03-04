@@ -59,8 +59,12 @@ export const useAuth = () => {
       };
       setUser(user);
       Cookies.set('token', response.token);
+      
+      const searchParams = new URLSearchParams(window.location.search);
+      const returnTo = searchParams.get('returnTo') || '/';
+      
       toast.success('Logged in successfully!');
-      navigate('/');
+      navigate(decodeURIComponent(returnTo));
     },
     onError: (error: any) => {
       const message = error?.response?.data?.message || 'Login failed';
